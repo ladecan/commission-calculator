@@ -218,7 +218,9 @@
 </div>
 
 <script>
-const CLOUD_KEY      = 'lease-data-v1';
+const JSONBIN_ID     = '69e8681d856a6821895d0286';
+const JSONBIN_KEY    = '$2a$10$pq9xquHfmZLTaXFITDQ4UeETymFWT9fGNsNjNajTeklAVJ6OS3YPi';
+const JSONBIN_URL    = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
 const ADMIN_PIN      = '1234';        // ← 원하는 PIN으로 변경하세요
 const POLL_MS        = 15000;
 
@@ -240,12 +242,17 @@ function setSyncDot(state, label) {
   document.getElementById('sync-label').textContent = label;
 }
 
-// ── 클라우드 ──────────────────────────────────────────────
+// ── JSONBin 클라우드 ─────────────────────────────────────
 async function cloudSave() {
   setSyncDot('syncing', '저장 중...');
   try {
     const payload = { data, updatedAt: new Date().toISOString() };
-    await window.storage.set(CLOUD_KEY, JSON.stringify(payload), true);
+    const res = await fetch(JSONBIN_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error();
     setSyncDot('ok', '저장됨');
     document.getElementById('updated-at').textContent = fmtTime(payload.updatedAt);
   } catch(e) {
@@ -255,10 +262,14 @@ async function cloudSave() {
 
 async function cloudLoad() {
   try {
-    const res = await window.storage.get(CLOUD_KEY, true);
-    if (res && res.value) {
-      const p = JSON.parse(res.value);
-      data = p.data || [];
+    const res = await fetch(JSONBIN_URL + '/latest', {
+      headers: { 'X-Master-Key': JSONBIN_KEY }
+    });
+    if (!res.ok) throw new Error();
+    const json = await res.json();
+    const p = json.record;
+    if (p && p.data) {
+      data = p.data;
       const t = fmtTime(p.updatedAt);
       document.getElementById('updated-at').textContent = t;
       document.getElementById('last-sync-label').textContent = '마지막 업데이트: ' + t;
