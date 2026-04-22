@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commission Calculator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap');
+
+:root {
+  --bg: #f5f2ec;
+  --surface: #ffffff;
+  --border: #e0dbd0;
+  --text: #1a1814;
+  --muted: #8a847a;
+  --accent: #2d5a3d;
+  --accent-light: #e8f0eb;
+  --mono: 'DM Mono', monospace;
+  --serif: 'Instrument Serif', serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 24px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 36px;
+  width: 100%;
+  max-width: 480px;
+}
+
+h1 {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+.subtitle {
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 32px;
+}
+
+.row { margin-bottom: 24px; }
+
+label {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.calc-input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 1rem;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.calc-input:focus { border-color: var(--accent); }
+
+/* Stepper */
+.stepper {
+  display: flex;
+  align-items: stretch;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  width: fit-content;
+}
+.step-btn {
+  background: var(--bg);
+  border: none;
+  padding: 13px 22px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--text);
+  font-family: var(--mono);
+  transition: background 0.1s;
+  user-select: none;
+}
+.step-btn:hover { background: var(--accent-light); color: var(--accent); }
+.step-btn:active { background: var(--accent); color: white; }
+.step-val {
+  padding: 13px 32px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border-left: 1.5px solid var(--border);
+  border-right: 1.5px solid var(--border);
+  min-width: 80px;
+  text-align: center;
+  background: var(--surface);
+}
+.step-note { font-size: 0.68rem; color: var(--muted); margin-top: 7px; }
+
+/* Button groups */
+.btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.choice-btn {
+  padding: 10px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.12s;
+  line-height: 1.4;
+  text-align: left;
+}
+.choice-btn:hover { border-color: var(--accent); color: var(--accent); }
+.choice-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+.choice-btn .sub { display: block; font-size: 0.6rem; opacity: 0.6; margin-top: 2px; }
+.choice-btn.active .sub { opacity: 0.7; }
+
+.rate-group { display: flex; gap: 8px; }
+.rate-btn {
+  flex: 1;
+  padding: 13px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.12s;
+  text-align: center;
+}
+.rate-btn:hover { border-color: var(--accent); color: var(--accent); }
+.rate-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+/* Divider */
+.divider { border: none; border-top: 1.5px solid var(--border); margin: 28px 0; }
+
+/* Result */
+.result-box {
+  background: var(--text);
+  color: white;
+  border-radius: 12px;
+  padding: 24px;
+}
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.result-row:last-child { border-bottom: none; }
+.r-label { font-size: 0.67rem; opacity: 0.45; letter-spacing: 0.04em; }
+.r-val { font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+.r-val.empty { opacity: 0.3; }
+
+.result-total {
+  margin-top: 10px;
+  padding-top: 16px !important;
+  border-top: 1px solid rgba(255,255,255,0.18) !important;
+  border-bottom: none !important;
+}
+.result-total .r-label { font-size: 0.72rem; opacity: 0.6; }
+.result-total .r-val {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  color: #a8d5b5;
+}
+.result-total .r-val.empty { color: rgba(168,213,181,0.3); }
+
+footer {
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--muted);
+  margin-top: 24px;
+}
+</style>
+</head>
+<body>
+
+<div>
+  <div class="card">
+    <h1>Commission<br>Calculator</h1>
+    <p class="subtitle">CANDELA KOREA · VAT INCLUDED</p>
+
+    <div class="row">
+      <label>총 계약금액 (부가세 별도)</label>
+      <input class="calc-input" type="text" id="contractInput" placeholder="예: 147,727,272">
+    </div>
+
+    <div class="row">
+      <label>DCD 박스 수</label>
+      <div class="stepper">
+        <button class="step-btn" id="stepMinus">−</button>
+        <div class="step-val" id="dcdVal">0</div>
+        <button class="step-btn" id="stepPlus">+</button>
+      </div>
+      <div class="step-note" id="dcdNote">차감 없음</div>
+    </div>
+
+    <div class="row">
+      <label>워런티 (Extended Warranty)</label>
+      <div class="btn-group">
+        <button class="choice-btn active" data-warranty="0">없음</button>
+        <button class="choice-btn" data-warranty="21000000">2년 · 2,100만원<span class="sub">'26년~ 납품</span></button>
+        <button class="choice-btn" data-warranty="20000000">2년 · 2,000만원<span class="sub">'26년 이전 납품</span></button>
+      </div>
+    </div>
+
+    <div class="row">
+      <label>수수료율</label>
+      <div class="rate-group">
+        <button class="rate-btn" data-rate="0.07">7%</button>
+        <button class="rate-btn active" data-rate="0.10">10%</button>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="result-box">
+      <div class="result-row">
+        <span class="r-label">총 계약금액</span>
+        <span class="r-val empty" id="rContract">—</span>
+      </div>
+      <div class="result-row">
+        <span class="r-label">DCD 차감</span>
+        <span class="r-val" id="rDCD">없음</span>
+      </div>
+      <div class="result-row">
+        <span class="r-label">워런티 차감</span>
+        <span class="r-val" id="rWarranty">없음</span>
+      </div>
+      <div class="result-row">
+        <span class="r-label">수수료 계산용 실적</span>
+        <span class="r-val empty" id="rActual">—</span>
+      </div>
+      <div class="result-row">
+        <span class="r-label">커미션</span>
+        <span class="r-val empty" id="rComm">—</span>
+      </div>
+      <div class="result-row">
+        <span class="r-label">세액 (10%)</span>
+        <span class="r-val empty" id="rTax">—</span>
+      </div>
+      <div class="result-row result-total">
+        <span class="r-label">최종 커미션 합계 (VAT 포함)</span>
+        <span class="r-val empty" id="rTotal">—</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>Candela Korea Internal Use Only</footer>
+</div>
+
+<script>
+const fmt = n => Math.round(n).toLocaleString('ko-KR');
+
+let mDCD = 0, mWarranty = 0, mRate = 0.10;
+
+// 계약금액 입력
+document.getElementById('contractInput').addEventListener('input', function() {
+  let raw = this.value.replace(/[^0-9]/g, '');
+  this.value = raw ? parseInt(raw).toLocaleString('ko-KR') : '';
+  calc();
+});
+
+// DCD 스테퍼
+document.getElementById('stepMinus').addEventListener('click', () => {
+  mDCD = Math.max(0, mDCD - 1);
+  updateDCD();
+  calc();
+});
+document.getElementById('stepPlus').addEventListener('click', () => {
+  mDCD++;
+  updateDCD();
+  calc();
+});
+function updateDCD() {
+  document.getElementById('dcdVal').textContent = mDCD;
+  const amt = mDCD * 750000;
+  document.getElementById('dcdNote').textContent = mDCD > 0
+    ? `${mDCD}박스 × 750,000 = -${fmt(amt)}원 차감`
+    : '차감 없음';
+}
+
+// 워런티 버튼
+document.querySelectorAll('.choice-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    mWarranty = parseInt(btn.dataset.warranty);
+    calc();
+  });
+});
+
+// 수수료율 버튼
+document.querySelectorAll('.rate-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    mRate = parseFloat(btn.dataset.rate);
+    calc();
+  });
+});
+
+function setVal(id, text, isEmpty) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.classList.toggle('empty', !!isEmpty);
+}
+
+function calc() {
+  const raw = document.getElementById('contractInput').value.replace(/[^0-9]/g, '');
+  const contract = raw ? parseInt(raw) : 0;
+
+  if (!contract) {
+    setVal('rContract', '—', true);
+    setVal('rActual', '—', true);
+    setVal('rComm', '—', true);
+    setVal('rTax', '—', true);
+    setVal('rTotal', '—', true);
+    document.getElementById('rDCD').textContent = '없음';
+    document.getElementById('rWarranty').textContent = '없음';
+    return;
+  }
+
+  const dcdAmt = mDCD * 750000;
+  const actual = contract - dcdAmt - mWarranty;
+  const comm = actual * mRate;
+  const tax = comm * 0.1;
+  const total = comm + tax;
+
+  setVal('rContract', fmt(contract), false);
+  document.getElementById('rDCD').textContent = dcdAmt > 0 ? `-${fmt(dcdAmt)}` : '없음';
+  document.getElementById('rWarranty').textContent = mWarranty > 0 ? `-${fmt(mWarranty)}` : '없음';
+  setVal('rActual', fmt(actual), false);
+  setVal('rComm', fmt(comm), false);
+  setVal('rTax', fmt(tax), false);
+  setVal('rTotal', fmt(total), false);
+}
+</script>
+</body>
+</html>
