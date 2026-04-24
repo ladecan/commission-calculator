@@ -792,10 +792,10 @@ function getProductConfig(dealer, product) {
       {label:'+1년 · 900만원', val:9000000},
       {label:'+2년 · 1,400만원', val:14000000},
     ],
-    warrantyGuide: '기본 1년 포함 · 추가 시 차감',
+    warrantyGuide: '기본 1년 차감없음 · Add 1년 900만원 · Add 2년 1,400만원',
     dcdFree: 2,
     dcdTable: [0,0,1500000,3300000,4500000],
-    dcdGuide: '1~2박스 차감 없음 · 3박스부터: +150만/+330만/+450만',
+    dcdGuide: '기본 2박스 차감없음 · 추가 1박스 150만 · 2박스 330만 · 3박스 450만',
   };
   if (isHuman && isVBP) return {
     type: 'VBP', dealer: 'human',
@@ -805,36 +805,36 @@ function getProductConfig(dealer, product) {
       {label:'Add 3년 · 2,700만원', val:27000000},
       {label:'Laser Eyewear · 30만원', val:300000},
     ],
-    warrantyGuide: '기본 1년 포함 · 추가 시 차감',
+    warrantyGuide: '기본 1년 차감없음 · Add 2년 2,100만원 · Add 3년 2,700만원',
     dcdFree: 2,
     dcdTable: [0,0,1500000,3000000,4500000,6000000],
-    dcdGuide: '1~2박스 차감 없음 · 3박스부터: +150만/+300만/+450만/+600만',
+    dcdGuide: '기본 2박스 차감없음 · 추가 1박스 150만 · 2박스 300만 · 3박스 450만 · 4박스 600만',
   };
   if (!isHuman && isGMPP) return {
     type: 'GMPP', dealer: 'general',
     warranty: [
-      {label:'없음 (기본 1년)', val:0},
-      {label:'+1년 · 900만원', val:9000000},
-      {label:'+2년 · 1,400만원', val:14000000},
+      {label:'기본 1년 · 차감없음', val:0},
+      {label:'Add 1년 · 900만원', val:9000000},
+      {label:'Add 2년 · 1,400만원', val:14000000},
     ],
-    warrantyGuide: '기본 1년 포함 · 추가 시 차감',
+    warrantyGuide: '기본 1년 차감없음 · Add 1년 900만원 · Add 2년 1,400만원',
     dcdFree: 1,
     dcdTable: [0,0,750000,1500000,2250000],
-    dcdGuide: '1박스 차감없음 · 2박스 75만 · 3박스 150만 · 4박스 225만',
+    dcdGuide: '기본 1박스 차감없음 · 추가 1박스당 75만원',
   };
   if (!isHuman && isVBP) return {
     type: 'VBP', dealer: 'general',
     warranty: [
-      {label:'없음 (기본 1년)', val:0},
+      {label:'기본 1년 · 차감없음', val:0},
       {label:'Add 2년 · 2,100만원', val:21000000},
       {label:'Add 3년 · 2,700만원', val:27000000},
       {label:'Dye+PM · 600만원', val:6000000},
       {label:'Dye only · 300만원', val:3000000},
     ],
-    warrantyGuide: '기본 1년 포함 · 추가 시 차감',
+    warrantyGuide: '기본 1년 차감없음 · Add 2년 2,100만원 · Add 3년 2,700만원',
     dcdFree: 1,
     dcdTable: [0,0,750000,1500000,2250000,3000000],
-    dcdGuide: '1박스 차감없음 · 2박스 75만 · 3박스 150만 · 4박스 225만 · 5박스 300만',
+    dcdGuide: '기본 1박스 차감없음 · 추가 1박스당 75만원',
   };
   // fallback
   return {
