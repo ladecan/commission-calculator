@@ -201,7 +201,10 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
       <h1>Commission<br>Calculator</h1>
       <p class="subtitle">CANDELA KOREA · INDIRECT · VAT INCLUDED</p>
     </div>
-    <span class="mode-badge">ADMIN</span>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button onclick="location.hash=''" class="btn-sm">일반 페이지</button>
+      <span class="mode-badge">ADMIN</span>
+    </div>
   </div>
   <div class="error-msg" id="adminErr"></div>
 
@@ -560,7 +563,7 @@ function adminProcessFile(file) {
       localStorage.setItem(KEY_DATA, JSON.stringify(allData));
       // Upload to Supabase
       try {
-        await sbFetch('DELETE', '/rest/v1/excel_data?id=neq.00000000-0000-0000-0000-000000000000');
+        await sbFetch('DELETE', '/rest/v1/excel_data?uploaded_at=gte.2000-01-01');
         for (let i=0; i<parsed.length; i+=50) {
           await sbFetch('POST', '/rest/v1/excel_data', parsed.slice(i,i+50));
         }
