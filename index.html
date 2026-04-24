@@ -370,10 +370,29 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
 </div><!-- .wrap -->
 
 <script>
-// ── Storage keys ──────────────────────────────────────────────
-const KEY_DATA   = 'cc_excelData';
-const KEY_RES    = 'cc_results';
-const ADMIN_PW   = 'candela2025';
+// ── Supabase ──────────────────────────────────────────────────
+const SB_URL = 'https://lvmolsfspsojhtauciod.supabase.co';
+const SB_KEY = 'sb_publishable_kbn6g7mly7UQN3IcrwJPGA_uQtUlyy-';
+
+async function sbFetch(method, path, body) {
+  const res = await fetch(SB_URL + path, {
+    method,
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': method === 'POST' ? 'resolution=merge-duplicates' : ''
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  if (!res.ok) { const t = await res.text(); throw new Error(t); }
+  const text = await res.text();
+  return text ? JSON.parse(text) : [];
+}
+
+// ── Storage keys (엑셀 데이터만 로컬) ─────────────────────────
+const KEY_DATA = 'cc_excelData';
+const ADMIN_PW = 'candela2025';
 
 // ── State ─────────────────────────────────────────────────────
 let allData = [];
@@ -424,11 +443,12 @@ function tryPw() {
 }
 
 // ── Admin ─────────────────────────────────────────────────────
-function showAdmin() {
+async function showAdmin() {
   document.getElementById('adminPwPage').style.display = 'none';
   document.getElementById('adminPage').style.display = '';
   document.getElementById('userPage').style.display = 'none';
-  loadAll();
+  loadLocal();
+  await loadResults();
   renderAdminMonths();
   renderAdminTable();
 }
@@ -446,27 +466,26 @@ document.getElementById('adminFileInput').addEventListener('change', e => {
 });
 
 document.getElementById('exportBtn').addEventListener('click', exportCSV);
-document.getElementById('clearResultsBtn').addEventListener('click', () => {
+document.getElementById('clearResultsBtn').addEventListener('click', async () => {
   if (confirm('모든 계산 결과를 삭제할까요?')) {
-    results = {};
-    saveResults();
-    renderAdminTable();
+    try {
+      await sbFetch('DELETE', '/rest/v1/commission_results?id=neq.00000000-0000-0000-0000-000000000000');
+      results = {};
+      renderAdminTable();
+    } catch(e) { alert('삭제 오류: '+e.message); }
   }
 });
 
-function loadAll() {
-  try {
-    const d = localStorage.getItem(KEY_DATA);
-    if (d) allData = JSON.parse(d);
-  } catch(e) { allData = []; }
-  try {
-    const r = localStorage.getItem(KEY_RES);
-    if (r) results = JSON.parse(r);
-  } catch(e) { results = {}; }
+function loadLocal() {
+  try { const d = localStorage.getItem(KEY_DATA); if (d) allData = JSON.parse(d); } catch(e) { allData = []; }
 }
 
-function saveResults() {
-  localStorage.setItem(KEY_RES, JSON.stringify(results));
+async function loadResults() {
+  try {
+    const rows = await sbFetch('GET', '/rest/v1/commission_results?select=*');
+    results = {};
+    rows.forEach(r => { results[r.paydate+'__'+r.owner+'__'+r.customer] = { contract:r.contract, dcd:r.dcd, warranty:r.warranty, rate:r.rate, actual:r.actual, total:r.total }; });
+  } catch(e) { console.error('loadResults:', e); }
 }
 
 function adminProcessFile(file) {
@@ -524,7 +543,7 @@ function adminProcessFile(file) {
 }
 
 function renderAdminMonths() {
-  loadAll();
+  loadLocal();
   const months = [...new Set(allData.map(d=>d.paydate))].sort((a,b)=>b-a);
   const pills = document.getElementById('adminMonthPills');
   pills.innerHTML = '';
@@ -546,7 +565,6 @@ function renderAdminMonths() {
 }
 
 function renderAdminTable() {
-  loadAll();
   const monthData = allData.filter(d => d.paydate === adminMonth);
   const owners = [...new Set(monthData.map(d=>d.owner))].sort();
 
@@ -611,7 +629,7 @@ function renderAdminTable() {
 }
 
 function exportCSV() {
-  loadAll();
+  loadLocal();
   const rows = [['지급월','담당자','거래처','딜러','제품','계약금액','DCD박스','워런티','실적','수수료율','커미션','세액','합계(VAT)']];
   allData.forEach(d => {
     const key = resultKey(d.paydate, d.owner, d.customer);
@@ -634,11 +652,12 @@ function exportCSV() {
 }
 
 // ── User ──────────────────────────────────────────────────────
-function showUser() {
+async function showUser() {
   document.getElementById('adminPwPage').style.display = 'none';
   document.getElementById('adminPage').style.display = 'none';
   document.getElementById('userPage').style.display = '';
-  loadAll();
+  loadLocal();
+  await loadResults();
   const months = [...new Set(allData.map(d=>d.paydate))].sort((a,b)=>b-a);
   renderUserMonths(months);
   if(months.length) { currentMonth = months[0]; renderOwners(months[0]); }
@@ -790,7 +809,7 @@ function calc() {
   document.getElementById('saveBtn').disabled = !contract;
 }
 
-document.getElementById('saveBtn').addEventListener('click', () => {
+document.getElementById('saveBtn').addEventListener('click', async () => {
   if(!currentRow) return;
   const raw = document.getElementById('contractInput').value.replace(/[^0-9]/g,'');
   const contract = parseInt(raw)||0;
@@ -799,12 +818,24 @@ document.getElementById('saveBtn').addEventListener('click', () => {
   const actual=contract-dcdAmt-mWarranty;
   const comm=actual*mRate;
   const tax=comm*0.1;
-  const total=comm+tax;
-  const key = resultKey(currentRow.paydate, currentRow.owner, currentRow.customer);
-  results[key] = { contract, dcd:mDCD, warranty:mWarranty, rate:mRate, actual, total, savedAt: new Date().toISOString() };
-  saveResults();
-  document.getElementById('saveNote').textContent = '✓ 저장되었습니다.';
-  document.getElementById('saveBtn').textContent = '결과 다시 저장하기';
+  const total=Math.round(comm+tax);
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true; btn.textContent = '저장 중...';
+  try {
+    await sbFetch('POST', '/rest/v1/commission_results', {
+      paydate: currentRow.paydate, owner: currentRow.owner, customer: currentRow.customer,
+      contract, dcd:mDCD, warranty:mWarranty, rate:mRate, actual:Math.round(actual), total
+    });
+    const key = currentRow.paydate+'__'+currentRow.owner+'__'+currentRow.customer;
+    results[key] = { contract, dcd:mDCD, warranty:mWarranty, rate:mRate, actual:Math.round(actual), total };
+    document.getElementById('saveNote').textContent = '✓ 저장되었습니다.';
+    btn.textContent = '결과 다시 저장하기';
+    btn.disabled = false;
+  } catch(e) {
+    document.getElementById('saveNote').textContent = '⚠ 저장 실패: '+e.message;
+    btn.textContent = '이 결과 저장하기';
+    btn.disabled = false;
+  }
 });
 
 function resultKey(paydate, owner, customer) {
