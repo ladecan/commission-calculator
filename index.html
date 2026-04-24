@@ -332,20 +332,22 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
       </div>
       <div class="row">
         <span class="field-label">DCD 박스 수</span>
-        <div class="stepper">
-          <button class="step-btn" id="stepMinus">−</button>
-          <div class="step-val" id="dcdVal">0</div>
-          <button class="step-btn" id="stepPlus">+</button>
+        <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;">
+          <div>
+            <div class="stepper">
+              <button class="step-btn" id="stepMinus">−</button>
+              <div class="step-val" id="dcdVal">0</div>
+              <button class="step-btn" id="stepPlus">+</button>
+            </div>
+            <div class="step-note" id="dcdNote">차감 없음</div>
+          </div>
+          <div id="dcdGuide" style="font-size:0.7rem;color:var(--muted);line-height:1.8;padding-top:10px;"></div>
         </div>
-        <div class="step-note" id="dcdNote">차감 없음</div>
       </div>
       <div class="row">
         <span class="field-label">워런티 (Extended Warranty)</span>
-        <div class="btn-group">
-          <button class="choice-btn active" data-warranty="0">없음</button>
-          <button class="choice-btn" data-warranty="21000000">2년 · 2,100만원<span class="sub">'26년~ 납품</span></button>
-          <button class="choice-btn" data-warranty="20000000">2년 · 2,000만원<span class="sub">'26년 이전 납품</span></button>
-        </div>
+        <div class="btn-group" id="warrantyBtns"></div>
+        <div id="warrantyGuide" style="font-size:0.7rem;color:var(--muted);margin-top:8px;line-height:1.8;"></div>
       </div>
       <div class="row">
         <span class="field-label">수수료율</span>
@@ -778,6 +780,105 @@ function renderCustomers(month, owner) {
   });
 }
 
+function getProductConfig(dealer, product) {
+  const isHuman = /human/i.test(dealer);
+  const isGMPP = /gentle|gmpp|gmax/i.test(product);
+  const isVBP = /vbeam|vbp/i.test(product);
+
+  if (isHuman && isGMPP) return {
+    type: 'GMPP', dealer: 'human',
+    warranty: [
+      {label:'없음 (기본 1년)', val:0},
+      {label:'+1년 · 900만원', val:9000000},
+      {label:'+2년 · 1,400만원', val:14000000},
+    ],
+    warrantyGuide: '기본 1년 포함 · 추가 시 차감',
+    dcdFree: 2,
+    dcdTable: [0,0,1500000,3300000,4500000],
+    dcdGuide: '1~2박스 차감 없음 · 3박스부터: +150만/+330만/+450만',
+  };
+  if (isHuman && isVBP) return {
+    type: 'VBP', dealer: 'human',
+    warranty: [
+      {label:'없음 (기본 1년)', val:0},
+      {label:'Ext. 2년 · 2,100만원', val:21000000},
+      {label:'Ext. 3년 · 2,700만원', val:27000000},
+      {label:'Laser Eyewear · 30만원', val:300000},
+    ],
+    warrantyGuide: '기본 1년 포함 · 추가 시 차감',
+    dcdFree: 2,
+    dcdTable: [0,0,1500000,3000000,4500000,6000000],
+    dcdGuide: '1~2박스 차감 없음 · 3박스부터: +150만/+300만/+450만/+600만',
+  };
+  if (!isHuman && isGMPP) return {
+    type: 'GMPP', dealer: 'general',
+    warranty: [
+      {label:'없음 (기본 1년)', val:0},
+      {label:'+1년 · 900만원', val:9000000},
+      {label:'+2년 · 1,400만원', val:14000000},
+    ],
+    warrantyGuide: '기본 1년 포함 · 추가 시 차감',
+    dcdFree: 0,
+    dcdTable: [0,750000,1500000,2250000],
+    dcdGuide: '1박스 75만 · 2박스 150만 · 3박스 225만',
+  };
+  if (!isHuman && isVBP) return {
+    type: 'VBP', dealer: 'general',
+    warranty: [
+      {label:'없음 (기본 1년)', val:0},
+      {label:'Ext. 2년 · 2,100만원', val:21000000},
+      {label:'Ext. 3년 · 2,700만원', val:27000000},
+      {label:'Dye+PM · 600만원', val:6000000},
+      {label:'Dye only · 300만원', val:3000000},
+    ],
+    warrantyGuide: '기본 1년 포함 · 추가 시 차감',
+    dcdFree: 0,
+    dcdTable: [0,750000,1500000,2250000,3000000],
+    dcdGuide: '1박스 75만 · 2박스 150만 · 3박스 225만 · 4박스 300만',
+  };
+  // fallback
+  return {
+    type: 'OTHER', dealer: 'general',
+    warranty: [
+      {label:'없음', val:0},
+      {label:'2년 · 2,100만원', val:21000000},
+      {label:'2년 · 2,000만원', val:20000000},
+    ],
+    warrantyGuide: '',
+    dcdFree: 0,
+    dcdTable: [0,750000,1500000,2250000],
+    dcdGuide: '1박스 75만 · 2박스 150만 · 3박스 225만',
+  };
+}
+
+let currentConfig = null;
+
+function renderWarrantyBtns(config, selectedVal) {
+  const container = document.getElementById('warrantyBtns');
+  container.innerHTML = '';
+  config.warranty.forEach(w => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn' + (w.val === selectedVal ? ' active' : '');
+    btn.dataset.warranty = w.val;
+    btn.textContent = w.label;
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#warrantyBtns .choice-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      mWarranty = parseInt(btn.dataset.warranty);
+      calc();
+    });
+    container.appendChild(btn);
+  });
+  document.getElementById('warrantyGuide').textContent = config.warrantyGuide;
+  document.getElementById('dcdGuide').textContent = config.dcdGuide;
+}
+
+function getDCDAmount(config, boxes) {
+  const t = config.dcdTable;
+  if (boxes >= t.length) return t[t.length-1];
+  return t[boxes] || 0;
+}
+
 function loadCalc(d, saved) {
   currentRow = d;
   document.getElementById('selCustomer').textContent = d.customer||'—';
@@ -785,12 +886,14 @@ function loadCalc(d, saved) {
   document.getElementById('selAmount').textContent = fmt(d.contract);
   document.getElementById('selProduct').textContent = d.product||'';
 
+  currentConfig = getProductConfig(d.dealer, d.product);
+
   if(saved) {
     mDCD = saved.dcd; mWarranty = saved.warranty; mRate = saved.rate;
     document.getElementById('contractInput').value = parseInt(saved.contract).toLocaleString('ko-KR');
     document.getElementById('dcdVal').textContent = mDCD;
     updateDCD();
-    document.querySelectorAll('.choice-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.warranty)===mWarranty));
+    renderWarrantyBtns(currentConfig, mWarranty);
     document.querySelectorAll('.rate-btn').forEach(b => b.classList.toggle('active', parseFloat(b.dataset.rate)===mRate));
     document.getElementById('saveNote').textContent = '✓ 이미 저장된 데이터입니다. 수정 후 다시 저장 가능합니다.';
     document.getElementById('saveBtn').textContent = '결과 다시 저장하기';
@@ -799,7 +902,7 @@ function loadCalc(d, saved) {
     document.getElementById('contractInput').value = d.contract ? parseInt(d.contract).toLocaleString('ko-KR') : '';
     document.getElementById('dcdVal').textContent='0';
     document.getElementById('dcdNote').textContent='차감 없음';
-    document.querySelectorAll('.choice-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+    renderWarrantyBtns(currentConfig, 0);
     document.querySelectorAll('.rate-btn').forEach(b=>b.classList.toggle('active', parseFloat(b.dataset.rate)===mRate));
     document.getElementById('saveNote').textContent = '';
     document.getElementById('saveBtn').textContent = '이 결과 저장하기';
@@ -820,8 +923,8 @@ document.getElementById('stepMinus').addEventListener('click',()=>{ mDCD=Math.ma
 document.getElementById('stepPlus').addEventListener('click',()=>{ mDCD++; updateDCD(); calc(); });
 function updateDCD() {
   document.getElementById('dcdVal').textContent=mDCD;
-  const a=mDCD*750000;
-  document.getElementById('dcdNote').textContent=mDCD>0?`${mDCD}박스 × 750,000 = -${fmt(a)}원 차감`:'차감 없음';
+  const a = currentConfig ? getDCDAmount(currentConfig, mDCD) : mDCD*750000;
+  document.getElementById('dcdNote').textContent=a>0?`${mDCD}박스 → -${fmt(a)}원 차감`:'차감 없음';
 }
 document.querySelectorAll('.choice-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{ document.querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); mWarranty=parseInt(btn.dataset.warranty); calc(); });
@@ -833,7 +936,7 @@ document.querySelectorAll('.rate-btn').forEach(btn=>{
 function calc() {
   const raw=document.getElementById('contractInput').value.replace(/[^0-9]/g,'');
   const contract=raw?parseInt(raw):0;
-  const dcdAmt=mDCD*750000;
+  const dcdAmt = currentConfig ? getDCDAmount(currentConfig, mDCD) : mDCD*750000;
   const actual=contract-dcdAmt-mWarranty;
   const comm=actual*mRate;
   const tax=comm*0.1;
@@ -854,7 +957,7 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
   const raw = document.getElementById('contractInput').value.replace(/[^0-9]/g,'');
   const contract = parseInt(raw)||0;
   if(!contract) return;
-  const dcdAmt=mDCD*750000;
+  const dcdAmt = currentConfig ? getDCDAmount(currentConfig, mDCD) : mDCD*750000;
   const actual=contract-dcdAmt-mWarranty;
   const comm=actual*mRate;
   const tax=comm*0.1;
