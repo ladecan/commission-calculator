@@ -517,7 +517,7 @@ function loadLocal() {
 
 async function loadExcelData() {
   try {
-    const rows = await sbFetch('GET', '/rest/v1/excel_data?select=*&order=paydate.desc');
+    const rows = await sbFetch('GET', '/rest/v1/excel_data?select=*&order=paydate.desc&owner=neq.__active_month__');
     if (rows && rows.length) { allData = rows; localStorage.setItem(KEY_DATA, JSON.stringify(allData)); }
     else loadLocal();
   } catch(e) { loadLocal(); }
