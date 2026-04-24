@@ -785,7 +785,7 @@ function renderCustomers(month, owner) {
 
 function getDealerRate(dealer) {
   const d = (dealer||'').toLowerCase();
-  if (/tmi|innomed|이노메드|sevenu|세븐유/.test(d)) return 0.10;
+  if (/tmi|innomed|이노메드|seven.?u|세븐유/.test(d)) return 0.10;
   return 0.07;
 }
 
