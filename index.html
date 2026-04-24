@@ -835,8 +835,9 @@ function getProductConfig(dealer, product) {
   if (isHuman && isVBP) return {
     type: 'VBP', dealer: 'human',
     warranty: [
-      {label:'없음 (기본 1년)', val:0},
-      {label:'Ext 2년 · 2,100만원', val:21000000},
+      {label:'기본 1년 · 차감없음', val:0},
+      {label:"Ext 2년 · 2,100만원", val:21000000, sub:"'26년~ 납품"},
+      {label:"Ext 2년 · 2,000만원", val:20000000, sub:"'25년 이전 납품"},
       {label:'Ext 3년 · 2,700만원', val:27000000},
       {label:'Laser Eyewear · 30만원', val:300000},
     ],
@@ -862,12 +863,11 @@ function getProductConfig(dealer, product) {
     type: 'VBP', dealer: 'general',
     warranty: [
       {label:'기본 1년 · 차감없음', val:0},
-      {label:'Ext 2년 · 2,100만원', val:21000000},
+      {label:"Ext 2년 · 2,100만원", val:21000000, sub:"'26년~ 납품"},
+      {label:"Ext 2년 · 2,000만원", val:20000000, sub:"'25년 이전 납품"},
       {label:'Ext 3년 · 2,700만원', val:27000000},
-      {label:'Dye+PM · 600만원', val:6000000},
-      {label:'Dye only · 300만원', val:3000000},
     ],
-    warrantyGuide: '기본 1년 차감없음 · Ext 2년 2,100만원 · Ext 3년 2,700만원',
+    warrantyGuide: '기본 1년 차감없음 · Ext 2년 2,100만원(26년~) / 2,000만원(25년 이전)',
     dcdFree: 1,
     pricePerBox: 750000,
     dcdTable: [],
@@ -897,7 +897,7 @@ function renderWarrantyBtns(config, selectedVal) {
     const btn = document.createElement('button');
     btn.className = 'choice-btn' + (w.val === selectedVal ? ' active' : '');
     btn.dataset.warranty = w.val;
-    btn.textContent = w.label;
+    btn.innerHTML = w.sub ? `${w.label}<span class="sub">${w.sub}</span>` : w.label;
     btn.addEventListener('click', () => {
       document.querySelectorAll('#warrantyBtns .choice-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
