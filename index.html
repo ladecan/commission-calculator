@@ -818,9 +818,9 @@ function getProductConfig(dealer, product) {
       {label:'+2년 · 1,400만원', val:14000000},
     ],
     warrantyGuide: '기본 1년 포함 · 추가 시 차감',
-    dcdFree: 0,
-    dcdTable: [0,750000,1500000,2250000],
-    dcdGuide: '1박스 75만 · 2박스 150만 · 3박스 225만',
+    dcdFree: 1,
+    dcdTable: [0,0,750000,1500000,2250000],
+    dcdGuide: '1박스 차감없음 · 2박스 75만 · 3박스 150만 · 4박스 225만',
   };
   if (!isHuman && isVBP) return {
     type: 'VBP', dealer: 'general',
@@ -845,9 +845,9 @@ function getProductConfig(dealer, product) {
       {label:'2년 · 2,000만원', val:20000000},
     ],
     warrantyGuide: '',
-    dcdFree: 0,
-    dcdTable: [0,750000,1500000,2250000],
-    dcdGuide: '1박스 75만 · 2박스 150만 · 3박스 225만',
+    dcdFree: 1,
+    dcdTable: [0,0,750000,1500000,2250000],
+    dcdGuide: '1박스 차감없음 · 2박스 75만 · 3박스 150만 · 4박스 225만',
   };
 }
 
