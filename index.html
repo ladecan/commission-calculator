@@ -801,8 +801,8 @@ function getProductConfig(dealer, product) {
     type: 'VBP', dealer: 'human',
     warranty: [
       {label:'없음 (기본 1년)', val:0},
-      {label:'Ext. 2년 · 2,100만원', val:21000000},
-      {label:'Ext. 3년 · 2,700만원', val:27000000},
+      {label:'Add 2년 · 2,100만원', val:21000000},
+      {label:'Add 3년 · 2,700만원', val:27000000},
       {label:'Laser Eyewear · 30만원', val:300000},
     ],
     warrantyGuide: '기본 1년 포함 · 추가 시 차감',
@@ -826,15 +826,15 @@ function getProductConfig(dealer, product) {
     type: 'VBP', dealer: 'general',
     warranty: [
       {label:'없음 (기본 1년)', val:0},
-      {label:'Ext. 2년 · 2,100만원', val:21000000},
-      {label:'Ext. 3년 · 2,700만원', val:27000000},
+      {label:'Add 2년 · 2,100만원', val:21000000},
+      {label:'Add 3년 · 2,700만원', val:27000000},
       {label:'Dye+PM · 600만원', val:6000000},
       {label:'Dye only · 300만원', val:3000000},
     ],
     warrantyGuide: '기본 1년 포함 · 추가 시 차감',
-    dcdFree: 0,
-    dcdTable: [0,750000,1500000,2250000,3000000],
-    dcdGuide: '1박스 75만 · 2박스 150만 · 3박스 225만 · 4박스 300만',
+    dcdFree: 1,
+    dcdTable: [0,0,750000,1500000,2250000,3000000],
+    dcdGuide: '1박스 차감없음 · 2박스 75만 · 3박스 150만 · 4박스 225만 · 5박스 300만',
   };
   // fallback
   return {
