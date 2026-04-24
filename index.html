@@ -948,25 +948,6 @@ function updateWarrantyUI() {
   calc();
 }
 
-function renderWarrantyBtns(config, selectedVal) {
-  const container = document.getElementById('warrantyBtns');
-  container.innerHTML = '';
-  config.warranty.forEach(w => {
-    const btn = document.createElement('button');
-    btn.className = 'choice-btn' + (w.val === selectedVal ? ' active' : '');
-    btn.dataset.warranty = w.val;
-    btn.innerHTML = w.sub ? `${w.label}<span class="sub">${w.sub}</span>` : w.label;
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#warrantyBtns .choice-btn').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      mWarranty = parseInt(btn.dataset.warranty);
-      calc();
-    });
-    container.appendChild(btn);
-  });
-  document.getElementById('warrantyGuide').textContent = config.warrantyGuide;
-  document.getElementById('dcdGuide').textContent = config.dcdGuide;
-}
 
 function getDCDAmount(config, boxes) {
   const free = config.dcdFree || 0;
@@ -1000,7 +981,6 @@ function loadCalc(d, saved) {
     document.getElementById('contractInput').value = parseInt(saved.contract).toLocaleString('ko-KR');
     document.getElementById('dcdVal').textContent = mDCD;
     updateDCD();
-    renderWarrantyBtns(currentConfig, mWarranty);
     document.querySelectorAll('.rate-btn').forEach(b => b.classList.toggle('active', parseFloat(b.dataset.rate)===mRate));
     document.getElementById('rateGuide').textContent = '10%: TMI · Innomed · SevenU / 7%: 그 외';
     document.getElementById('saveNote').textContent = '✓ 이미 저장된 데이터입니다. 수정 후 다시 저장 가능합니다.';
@@ -1010,7 +990,6 @@ function loadCalc(d, saved) {
     document.getElementById('contractInput').value = d.contract ? parseInt(d.contract).toLocaleString('ko-KR') : '';
     document.getElementById('dcdVal').textContent='0';
     document.getElementById('dcdNote').textContent='차감 없음';
-    renderWarrantyBtns(currentConfig, 0);
     document.querySelectorAll('.rate-btn').forEach(b=>b.classList.toggle('active', parseFloat(b.dataset.rate)===mRate));
     document.getElementById('rateGuide').textContent = '10%: TMI · Innomed · SevenU / 7%: 그 외';
     document.getElementById('saveNote').textContent = '';
