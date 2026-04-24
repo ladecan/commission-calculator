@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Commission Calculator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap');
 
@@ -26,246 +27,247 @@ body {
   color: var(--text);
   font-family: var(--mono);
   min-height: 100vh;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 48px 24px;
+  padding: 40px 20px;
 }
 
-.card {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: 16px;
-  padding: 36px;
-  width: 100%;
-  max-width: 480px;
-}
+.wrap { max-width: 520px; margin: 0 auto; }
 
-h1 {
-  font-family: var(--serif);
-  font-size: 1.7rem;
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  margin-bottom: 4px;
-}
-.subtitle {
-  font-size: 0.68rem;
-  color: var(--muted);
-  letter-spacing: 0.06em;
-  margin-bottom: 32px;
-}
+h1 { font-family: var(--serif); font-size: 1.8rem; font-weight: 400; letter-spacing: -0.02em; margin-bottom: 4px; }
+.subtitle { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 32px; }
 
-.row { margin-bottom: 24px; }
-
-label {
-  display: block;
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 8px;
+/* STEP INDICATOR */
+.steps { display: flex; gap: 0; margin-bottom: 28px; }
+.step-item { display: flex; align-items: center; gap: 8px; font-size: 0.7rem; color: var(--muted); }
+.step-item.active { color: var(--accent); font-weight: 500; }
+.step-item.done { color: var(--muted); }
+.step-num {
+  width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center; font-size: 0.65rem; flex-shrink: 0;
 }
+.step-item.active .step-num { border-color: var(--accent); background: var(--accent); color: white; }
+.step-item.done .step-num { border-color: var(--border); background: var(--border); color: var(--muted); }
+.step-arrow { color: var(--border); margin: 0 10px; font-size: 0.8rem; }
+
+/* PANELS */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* UPLOAD */
+.upload-zone {
+  border: 1.5px dashed var(--border); background: var(--surface); border-radius: 12px;
+  padding: 44px 32px; text-align: center; cursor: pointer; transition: all 0.15s; position: relative;
+}
+.upload-zone:hover, .upload-zone.over { border-color: var(--accent); background: var(--accent-light); }
+.upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.upload-icon { font-size: 2.2rem; display: block; margin-bottom: 14px; }
+.upload-zone h3 { font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; }
+.upload-zone p { font-size: 0.72rem; color: var(--muted); }
+
+/* DEALER LIST */
+.dealer-list { display: flex; flex-direction: column; gap: 8px; }
+.dealer-card {
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px;
+  padding: 16px 20px; cursor: pointer; transition: all 0.12s;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.dealer-card:hover { border-color: var(--accent); }
+.dealer-card.selected { border-color: var(--accent); background: var(--accent-light); }
+.dealer-name-txt { font-size: 0.85rem; font-weight: 500; margin-bottom: 3px; }
+.dealer-owner { font-size: 0.68rem; color: var(--muted); }
+.dealer-amount { text-align: right; }
+.dealer-amount .amt { font-size: 0.85rem; font-weight: 500; }
+.dealer-amount .lbl { font-size: 0.62rem; color: var(--muted); }
+.chevron { color: var(--border); font-size: 1rem; transition: color 0.12s; }
+.dealer-card:hover .chevron, .dealer-card.selected .chevron { color: var(--accent); }
+
+.month-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.month-lbl { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.06em; }
+.pill {
+  padding: 4px 12px; border-radius: 100px; border: 1.5px solid var(--border);
+  background: var(--surface); font-family: var(--mono); font-size: 0.72rem; cursor: pointer; color: var(--text);
+}
+.pill:hover { border-color: var(--accent); }
+.pill.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+/* CALC */
+.card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 28px; }
+
+.prefilled-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; background: var(--accent-light); border-radius: 8px; margin-bottom: 24px;
+}
+.prefilled-row .lbl { font-size: 0.65rem; color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; }
+.prefilled-row .val { font-size: 1rem; font-weight: 500; color: var(--accent); }
+
+.field-label { font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; display: block; }
 
 .calc-input {
-  width: 100%;
-  padding: 13px 16px;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  font-family: var(--mono);
-  font-size: 1rem;
-  background: var(--bg);
-  color: var(--text);
-  outline: none;
-  transition: border-color 0.15s;
+  width: 100%; padding: 13px 16px; border: 1.5px solid var(--border); border-radius: 8px;
+  font-family: var(--mono); font-size: 1rem; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s;
 }
 .calc-input:focus { border-color: var(--accent); }
 
-/* Stepper */
-.stepper {
-  display: flex;
-  align-items: stretch;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-  width: fit-content;
-}
+.row { margin-bottom: 22px; }
+
+.stepper { display: flex; align-items: stretch; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; width: fit-content; }
 .step-btn {
-  background: var(--bg);
-  border: none;
-  padding: 13px 22px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: var(--text);
-  font-family: var(--mono);
-  transition: background 0.1s;
-  user-select: none;
+  background: var(--bg); border: none; padding: 12px 20px; font-size: 1.2rem;
+  cursor: pointer; color: var(--text); transition: background 0.1s; user-select: none;
 }
 .step-btn:hover { background: var(--accent-light); color: var(--accent); }
 .step-btn:active { background: var(--accent); color: white; }
 .step-val {
-  padding: 13px 32px;
-  font-size: 1.1rem;
-  font-weight: 500;
-  border-left: 1.5px solid var(--border);
-  border-right: 1.5px solid var(--border);
-  min-width: 80px;
-  text-align: center;
-  background: var(--surface);
+  padding: 12px 28px; font-size: 1.05rem; font-weight: 500;
+  border-left: 1.5px solid var(--border); border-right: 1.5px solid var(--border);
+  min-width: 72px; text-align: center; background: var(--surface);
 }
-.step-note { font-size: 0.68rem; color: var(--muted); margin-top: 7px; }
+.step-note { font-size: 0.67rem; color: var(--muted); margin-top: 6px; }
 
-/* Button groups */
 .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
-
 .choice-btn {
-  padding: 10px 16px;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  cursor: pointer;
-  color: var(--text);
-  transition: all 0.12s;
-  line-height: 1.4;
-  text-align: left;
+  padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+  background: var(--surface); font-family: var(--mono); font-size: 0.73rem;
+  cursor: pointer; color: var(--text); transition: all 0.12s; line-height: 1.5; text-align: left;
 }
-.choice-btn:hover { border-color: var(--accent); color: var(--accent); }
+.choice-btn:hover { border-color: var(--accent); }
 .choice-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
-.choice-btn .sub { display: block; font-size: 0.6rem; opacity: 0.6; margin-top: 2px; }
+.choice-btn .sub { display: block; font-size: 0.59rem; opacity: 0.55; }
 .choice-btn.active .sub { opacity: 0.7; }
 
 .rate-group { display: flex; gap: 8px; }
 .rate-btn {
-  flex: 1;
-  padding: 13px;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
-  font-family: var(--mono);
-  font-size: 1.1rem;
-  font-weight: 500;
-  cursor: pointer;
-  color: var(--text);
-  transition: all 0.12s;
-  text-align: center;
+  flex: 1; padding: 12px; border: 1.5px solid var(--border); border-radius: 8px;
+  background: var(--surface); font-family: var(--mono); font-size: 1.05rem; font-weight: 500;
+  cursor: pointer; color: var(--text); transition: all 0.12s; text-align: center;
 }
-.rate-btn:hover { border-color: var(--accent); color: var(--accent); }
+.rate-btn:hover { border-color: var(--accent); }
 .rate-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
 
-/* Divider */
-.divider { border: none; border-top: 1.5px solid var(--border); margin: 28px 0; }
+.divider { border: none; border-top: 1.5px solid var(--border); margin: 24px 0; }
 
-/* Result */
-.result-box {
-  background: var(--text);
-  color: white;
-  border-radius: 12px;
-  padding: 24px;
-}
-.result-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 7px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-}
+.result-box { background: var(--text); color: white; border-radius: 10px; padding: 22px; }
+.result-row { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
 .result-row:last-child { border-bottom: none; }
-.r-label { font-size: 0.67rem; opacity: 0.45; letter-spacing: 0.04em; }
+.r-label { font-size: 0.65rem; opacity: 0.45; }
 .r-val { font-size: 0.88rem; font-variant-numeric: tabular-nums; }
-.r-val.empty { opacity: 0.3; }
+.r-val.dim { opacity: 0.25; }
+.result-total { margin-top: 10px; padding-top: 14px !important; border-top: 1px solid rgba(255,255,255,0.18) !important; border-bottom: none !important; }
+.result-total .r-label { font-size: 0.7rem; opacity: 0.6; }
+.result-total .r-val { font-family: var(--serif); font-size: 1.5rem; color: #a8d5b5; }
+.result-total .r-val.dim { color: rgba(168,213,181,0.25); }
 
-.result-total {
-  margin-top: 10px;
-  padding-top: 16px !important;
-  border-top: 1px solid rgba(255,255,255,0.18) !important;
-  border-bottom: none !important;
+.back-btn {
+  background: none; border: none; font-family: var(--mono); font-size: 0.72rem;
+  color: var(--muted); cursor: pointer; padding: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 6px;
 }
-.result-total .r-label { font-size: 0.72rem; opacity: 0.6; }
-.result-total .r-val {
-  font-family: var(--serif);
-  font-size: 1.5rem;
-  color: #a8d5b5;
-}
-.result-total .r-val.empty { color: rgba(168,213,181,0.3); }
+.back-btn:hover { color: var(--text); }
 
-footer {
-  text-align: center;
-  font-size: 0.65rem;
-  color: var(--muted);
-  margin-top: 24px;
-}
+.error-msg { background: #fdf0ed; color: #c84b2f; border: 1px solid #f0c0b0; border-radius: 8px; padding: 12px 16px; font-size: 0.75rem; margin-bottom: 16px; display: none; }
+.error-msg.show { display: block; }
+
+footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top: 28px; }
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<div>
-  <div class="card">
-    <h1>Commission<br>Calculator</h1>
-    <p class="subtitle">CANDELA KOREA · VAT INCLUDED</p>
+  <h1>Commission<br>Calculator</h1>
+  <p class="subtitle">CANDELA KOREA · INDIRECT · VAT INCLUDED</p>
 
-    <div class="row">
-      <label>총 계약금액 (부가세 별도)</label>
-      <input class="calc-input" type="text" id="contractInput" placeholder="예: 147,727,272">
+  <!-- Step indicator -->
+  <div class="steps">
+    <div class="step-item active" id="s1">
+      <div class="step-num">1</div><span>파일 업로드</span>
     </div>
-
-    <div class="row">
-      <label>DCD 박스 수</label>
-      <div class="stepper">
-        <button class="step-btn" id="stepMinus">−</button>
-        <div class="step-val" id="dcdVal">0</div>
-        <button class="step-btn" id="stepPlus">+</button>
-      </div>
-      <div class="step-note" id="dcdNote">차감 없음</div>
+    <span class="step-arrow">›</span>
+    <div class="step-item" id="s2">
+      <div class="step-num">2</div><span>딜러 선택</span>
     </div>
-
-    <div class="row">
-      <label>워런티 (Extended Warranty)</label>
-      <div class="btn-group">
-        <button class="choice-btn active" data-warranty="0">없음</button>
-        <button class="choice-btn" data-warranty="21000000">2년 · 2,100만원<span class="sub">'26년~ 납품</span></button>
-        <button class="choice-btn" data-warranty="20000000">2년 · 2,000만원<span class="sub">'26년 이전 납품</span></button>
-      </div>
+    <span class="step-arrow">›</span>
+    <div class="step-item" id="s3">
+      <div class="step-num">3</div><span>커미션 계산</span>
     </div>
+  </div>
 
-    <div class="row">
-      <label>수수료율</label>
-      <div class="rate-group">
-        <button class="rate-btn" data-rate="0.07">7%</button>
-        <button class="rate-btn active" data-rate="0.10">10%</button>
-      </div>
+  <div class="error-msg" id="errMsg"></div>
+
+  <!-- PANEL 1: Upload -->
+  <div class="panel active" id="p1">
+    <div class="upload-zone" id="dropZone">
+      <input type="file" id="fileInput" accept=".xlsx,.xls">
+      <span class="upload-icon">📂</span>
+      <h3>엑셀 파일 업로드</h3>
+      <p>Ext_Commission_Calc_and_Status_*.xlsx</p>
     </div>
+  </div>
 
-    <hr class="divider">
+  <!-- PANEL 2: Dealer select -->
+  <div class="panel" id="p2">
+    <button class="back-btn" id="backTo1">← 파일 다시 선택</button>
+    <div class="month-row">
+      <span class="month-lbl">지급월</span>
+      <div id="monthPills" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+    </div>
+    <div class="dealer-list" id="dealerList"></div>
+  </div>
 
-    <div class="result-box">
-      <div class="result-row">
-        <span class="r-label">총 계약금액</span>
-        <span class="r-val empty" id="rContract">—</span>
+  <!-- PANEL 3: Calculator -->
+  <div class="panel" id="p3">
+    <button class="back-btn" id="backTo2">← 딜러 다시 선택</button>
+    <div class="card">
+      <div class="prefilled-row">
+        <div>
+          <div class="lbl">선택된 딜러</div>
+          <div style="font-size:.82rem;font-weight:500;color:var(--accent);margin-top:2px" id="selectedDealer">—</div>
+        </div>
+        <div style="text-align:right">
+          <div class="lbl">총 계약금액</div>
+          <div class="val" id="selectedAmount">—</div>
+        </div>
       </div>
-      <div class="result-row">
-        <span class="r-label">DCD 차감</span>
-        <span class="r-val" id="rDCD">없음</span>
+
+      <div class="row">
+        <span class="field-label">총 계약금액 수동 입력 (선택)</span>
+        <input class="calc-input" type="text" id="contractInput" placeholder="자동 입력됨 · 수정 가능">
       </div>
-      <div class="result-row">
-        <span class="r-label">워런티 차감</span>
-        <span class="r-val" id="rWarranty">없음</span>
+
+      <div class="row">
+        <span class="field-label">DCD 박스 수</span>
+        <div class="stepper">
+          <button class="step-btn" id="stepMinus">−</button>
+          <div class="step-val" id="dcdVal">0</div>
+          <button class="step-btn" id="stepPlus">+</button>
+        </div>
+        <div class="step-note" id="dcdNote">차감 없음</div>
       </div>
-      <div class="result-row">
-        <span class="r-label">수수료 계산용 실적</span>
-        <span class="r-val empty" id="rActual">—</span>
+
+      <div class="row">
+        <span class="field-label">워런티 (Extended Warranty)</span>
+        <div class="btn-group">
+          <button class="choice-btn active" data-warranty="0">없음</button>
+          <button class="choice-btn" data-warranty="21000000">2년 · 2,100만원<span class="sub">'26년~ 납품</span></button>
+          <button class="choice-btn" data-warranty="20000000">2년 · 2,000만원<span class="sub">'26년 이전 납품</span></button>
+        </div>
       </div>
-      <div class="result-row">
-        <span class="r-label">커미션</span>
-        <span class="r-val empty" id="rComm">—</span>
+
+      <div class="row">
+        <span class="field-label">수수료율</span>
+        <div class="rate-group">
+          <button class="rate-btn" data-rate="0.07">7%</button>
+          <button class="rate-btn active" data-rate="0.10">10%</button>
+        </div>
       </div>
-      <div class="result-row">
-        <span class="r-label">세액 (10%)</span>
-        <span class="r-val empty" id="rTax">—</span>
-      </div>
-      <div class="result-row result-total">
-        <span class="r-label">최종 커미션 합계 (VAT 포함)</span>
-        <span class="r-val empty" id="rTotal">—</span>
+
+      <hr class="divider">
+
+      <div class="result-box">
+        <div class="result-row"><span class="r-label">총 계약금액</span><span class="r-val" id="rContract">—</span></div>
+        <div class="result-row"><span class="r-label">DCD 차감</span><span class="r-val" id="rDCD">없음</span></div>
+        <div class="result-row"><span class="r-label">워런티 차감</span><span class="r-val" id="rWarranty">없음</span></div>
+        <div class="result-row"><span class="r-label">수수료 계산용 실적</span><span class="r-val dim" id="rActual">—</span></div>
+        <div class="result-row"><span class="r-label">커미션</span><span class="r-val dim" id="rComm">—</span></div>
+        <div class="result-row"><span class="r-label">세액 (10%)</span><span class="r-val dim" id="rTax">—</span></div>
+        <div class="result-row result-total"><span class="r-label">최종 커미션 합계 (VAT 포함)</span><span class="r-val dim" id="rTotal">—</span></div>
       </div>
     </div>
   </div>
@@ -275,89 +277,160 @@ footer {
 
 <script>
 const fmt = n => Math.round(n).toLocaleString('ko-KR');
+let allData = [], currentMonth = '', mDCD = 0, mWarranty = 0, mRate = 0.10;
 
-let mDCD = 0, mWarranty = 0, mRate = 0.10;
+// ── Panels ──
+function showPanel(n) {
+  [1,2,3].forEach(i => {
+    document.getElementById('p'+i).classList.toggle('active', i===n);
+    const s = document.getElementById('s'+i);
+    s.classList.toggle('active', i===n);
+    s.classList.toggle('done', i<n);
+  });
+}
 
-// 계약금액 입력
+// ── Upload ──
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('over'));
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('over'); if(e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', e => { if(e.target.files[0]) processFile(e.target.files[0]); });
+
+function showErr(msg) { const el=document.getElementById('errMsg'); el.textContent=msg; el.classList.add('show'); }
+function hideErr() { document.getElementById('errMsg').classList.remove('show'); }
+
+function processFile(file) {
+  hideErr();
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames.find(n=>n==='Report')||wb.SheetNames[0]];
+      const raw = XLSX.utils.sheet_to_json(ws, { header:1, defval:null });
+
+      let hRow = -1;
+      for(let i=0;i<15;i++) { if(raw[i]&&raw[i].some(c=>c&&String(c).includes('총계약금액'))) { hRow=i; break; } }
+      if(hRow===-1) { showErr('헤더를 찾지 못했습니다.'); return; }
+
+      const h = raw[hRow];
+      const fc = kw => h.findIndex(c=>c&&String(c).includes(kw));
+      const col = { dealer:fc('Dealer name'), owner:fc('Opportunity owner'), di:fc('Direct/Indirect'), contract:fc('총계약금액'), rate:fc('수수료율'), remarks:fc('Remarks'), paydate:fc('지급일') };
+
+      allData = [];
+      for(let i=hRow+1;i<raw.length;i++) {
+        const r=raw[i]; if(!r) continue;
+        const di=String(r[col.di]||'').toLowerCase().replace(/[-\s]/g,'');
+        if(!di.includes('indirect')) continue;
+        const pd=String(r[col.paydate]||'').replace(/\D/g,'');
+        if(!pd||pd==='0') continue;
+        allData.push({ paydate:pd, dealer:String(r[col.dealer]||''), owner:String(r[col.owner]||''), contract:parseFloat(r[col.contract])||0, rate:parseFloat(r[col.rate])||0 });
+      }
+
+      const months=[...new Set(allData.map(d=>d.paydate))].sort((a,b)=>b-a);
+      if(!months.length) { showErr('Indirect 건이 없습니다.'); return; }
+
+      // Render month pills
+      const pills=document.getElementById('monthPills');
+      pills.innerHTML='';
+      months.forEach(m=>{
+        const btn=document.createElement('button');
+        btn.className='pill'+(m===months[0]?' active':'');
+        btn.textContent=m.slice(0,4)+'.'+m.slice(4,6);
+        btn.dataset.month=m;
+        btn.addEventListener('click',()=>{ document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active')); btn.classList.add('active'); renderDealers(m); });
+        pills.appendChild(btn);
+      });
+
+      renderDealers(months[0]);
+      showPanel(2);
+    } catch(err) { showErr('파일 오류: '+err.message); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function renderDealers(month) {
+  currentMonth = month;
+  const rows = allData.filter(d=>d.paydate===month);
+  const list = document.getElementById('dealerList');
+  list.innerHTML='';
+  rows.forEach(d=>{
+    const card=document.createElement('div');
+    card.className='dealer-card';
+    card.innerHTML=`
+      <div>
+        <div class="dealer-name-txt">${d.dealer||'—'}</div>
+        <div class="dealer-owner">${d.owner||''}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="dealer-amount">
+          <div class="lbl">총 계약금액</div>
+          <div class="amt">${fmt(d.contract)}</div>
+        </div>
+        <span class="chevron">›</span>
+      </div>`;
+    card.addEventListener('click',()=>loadCalc(d));
+    list.appendChild(card);
+  });
+}
+
+function loadCalc(d) {
+  document.getElementById('selectedDealer').textContent = d.dealer || '—';
+  document.getElementById('selectedAmount').textContent = fmt(d.contract);
+  const input = document.getElementById('contractInput');
+  input.value = d.contract ? parseInt(d.contract).toLocaleString('ko-KR') : '';
+  // reset
+  mDCD=0; mWarranty=0; mRate=0.10;
+  document.getElementById('dcdVal').textContent='0';
+  document.getElementById('dcdNote').textContent='차감 없음';
+  document.querySelectorAll('.choice-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.querySelectorAll('.rate-btn').forEach((b,i)=>b.classList.toggle('active',i===1));
+  calc();
+  showPanel(3);
+}
+
+// ── Back buttons ──
+document.getElementById('backTo1').addEventListener('click',()=>showPanel(1));
+document.getElementById('backTo2').addEventListener('click',()=>showPanel(2));
+
+// ── Calc inputs ──
 document.getElementById('contractInput').addEventListener('input', function() {
-  let raw = this.value.replace(/[^0-9]/g, '');
-  this.value = raw ? parseInt(raw).toLocaleString('ko-KR') : '';
+  let raw=this.value.replace(/[^0-9]/g,'');
+  this.value=raw?parseInt(raw).toLocaleString('ko-KR'):'';
   calc();
 });
 
-// DCD 스테퍼
-document.getElementById('stepMinus').addEventListener('click', () => {
-  mDCD = Math.max(0, mDCD - 1);
-  updateDCD();
-  calc();
-});
-document.getElementById('stepPlus').addEventListener('click', () => {
-  mDCD++;
-  updateDCD();
-  calc();
-});
+document.getElementById('stepMinus').addEventListener('click',()=>{ mDCD=Math.max(0,mDCD-1); updateDCD(); calc(); });
+document.getElementById('stepPlus').addEventListener('click',()=>{ mDCD++; updateDCD(); calc(); });
 function updateDCD() {
-  document.getElementById('dcdVal').textContent = mDCD;
-  const amt = mDCD * 750000;
-  document.getElementById('dcdNote').textContent = mDCD > 0
-    ? `${mDCD}박스 × 750,000 = -${fmt(amt)}원 차감`
-    : '차감 없음';
+  document.getElementById('dcdVal').textContent=mDCD;
+  const a=mDCD*750000;
+  document.getElementById('dcdNote').textContent=mDCD>0?`${mDCD}박스 × 750,000 = -${fmt(a)}원 차감`:'차감 없음';
 }
 
-// 워런티 버튼
-document.querySelectorAll('.choice-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    mWarranty = parseInt(btn.dataset.warranty);
-    calc();
-  });
+document.querySelectorAll('.choice-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{ document.querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); mWarranty=parseInt(btn.dataset.warranty); calc(); });
 });
-
-// 수수료율 버튼
-document.querySelectorAll('.rate-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    mRate = parseFloat(btn.dataset.rate);
-    calc();
-  });
+document.querySelectorAll('.rate-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{ document.querySelectorAll('.rate-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); mRate=parseFloat(btn.dataset.rate); calc(); });
 });
-
-function setVal(id, text, isEmpty) {
-  const el = document.getElementById(id);
-  el.textContent = text;
-  el.classList.toggle('empty', !!isEmpty);
-}
 
 function calc() {
-  const raw = document.getElementById('contractInput').value.replace(/[^0-9]/g, '');
-  const contract = raw ? parseInt(raw) : 0;
-
-  if (!contract) {
-    setVal('rContract', '—', true);
-    setVal('rActual', '—', true);
-    setVal('rComm', '—', true);
-    setVal('rTax', '—', true);
-    setVal('rTotal', '—', true);
-    document.getElementById('rDCD').textContent = '없음';
-    document.getElementById('rWarranty').textContent = '없음';
-    return;
-  }
-
-  const dcdAmt = mDCD * 750000;
-  const actual = contract - dcdAmt - mWarranty;
-  const comm = actual * mRate;
-  const tax = comm * 0.1;
-  const total = comm + tax;
-
-  setVal('rContract', fmt(contract), false);
-  document.getElementById('rDCD').textContent = dcdAmt > 0 ? `-${fmt(dcdAmt)}` : '없음';
-  document.getElementById('rWarranty').textContent = mWarranty > 0 ? `-${fmt(mWarranty)}` : '없음';
-  setVal('rActual', fmt(actual), false);
-  setVal('rComm', fmt(comm), false);
-  setVal('rTax', fmt(tax), false);
-  setVal('rTotal', fmt(total), false);
+  const raw=document.getElementById('contractInput').value.replace(/[^0-9]/g,'');
+  const contract=raw?parseInt(raw):0;
+  const dcdAmt=mDCD*750000;
+  const actual=contract-dcdAmt-mWarranty;
+  const comm=actual*mRate;
+  const tax=comm*0.1;
+  const total=comm+tax;
+  const set=(id,v,dim)=>{ const el=document.getElementById(id); el.textContent=v; el.classList.toggle('dim',!!dim); };
+  set('rContract', contract?fmt(contract):'—', !contract);
+  document.getElementById('rDCD').textContent=dcdAmt>0?`-${fmt(dcdAmt)}`:'없음';
+  document.getElementById('rWarranty').textContent=mWarranty>0?`-${fmt(mWarranty)}`:'없음';
+  set('rActual', contract?fmt(actual):'—', !contract);
+  set('rComm', contract?fmt(comm):'—', !contract);
+  set('rTax', contract?fmt(tax):'—', !contract);
+  set('rTotal', contract?fmt(total):'—', !contract);
 }
 </script>
 </body>
