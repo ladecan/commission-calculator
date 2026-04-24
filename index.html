@@ -415,16 +415,16 @@ const fmt = n => Math.round(n).toLocaleString('ko-KR');
 
 function dedup(name) {
   name = name.trim();
-  // Find the repeated half: "ABC_ABC" or "ABC ABC"
   const len = name.length;
   for (const sep of ['_', ' ']) {
-    const idx = Math.floor(len / 2);
-    // Try splitting at the middle separator
-    const mid = name.indexOf(sep, idx - 2);
-    if (mid > 0) {
-      const first = name.slice(0, mid).trim();
-      const second = name.slice(mid + 1).trim();
-      if (first === second) return first;
+    // Try every possible split point near the middle
+    const mid = Math.floor(len / 2);
+    for (let i = mid - 3; i <= mid + 3; i++) {
+      if (i <= 0 || i >= len) continue;
+      if (name[i] !== sep) continue;
+      const first = name.slice(0, i).trim();
+      const second = name.slice(i + 1).trim();
+      if (first === second && first.length > 0) return first;
     }
   }
   return name;
