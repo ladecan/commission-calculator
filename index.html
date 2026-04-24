@@ -919,7 +919,7 @@ function getWarrantyCost(config, years, isNew) {
   if (type === 'VBP') {
     if (years <= 1) return 0;
     if (years === 2) return isNew ? 21000000 : 20000000;
-    if (years >= 3) return 27000000;
+    if (years >= 3) return isNew ? 27000000 : 26000000;
   }
   return 0;
 }
@@ -932,7 +932,7 @@ function updateWarrantyUI() {
   
   // Show/hide year toggle for VBP when years === 2
   const toggle = document.getElementById('warrantyYearToggle');
-  if (type === 'VBP' && mWarrantyYears === 2) {
+  if (type === 'VBP' && mWarrantyYears >= 2) {
     toggle.style.display = '';
   } else {
     toggle.style.display = 'none';
