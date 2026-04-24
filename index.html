@@ -348,7 +348,22 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
       </div>
       <div class="row">
         <span class="field-label">워런티 (Extended Warranty)</span>
-        <div class="btn-group" id="warrantyBtns"></div>
+        <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;">
+          <div>
+            <div class="stepper">
+              <button class="step-btn" id="warrantyMinus">−</button>
+              <div class="step-val" id="warrantyVal">1년</div>
+              <button class="step-btn" id="warrantyPlus">+</button>
+            </div>
+            <div class="step-note" id="warrantyNote">기본 1년 · 차감없음</div>
+          </div>
+          <div id="warrantyYearToggle" style="display:none;padding-top:10px;">
+            <div class="btn-group">
+              <button class="choice-btn active" id="toggleNew">'26년~ 납품</button>
+              <button class="choice-btn" id="toggleOld">'25년 이전 납품</button>
+            </div>
+          </div>
+        </div>
         <div id="warrantyGuide" style="font-size:0.7rem;color:var(--muted);margin-top:8px;line-height:1.8;"></div>
       </div>
       <div class="row">
@@ -889,6 +904,49 @@ function getProductConfig(dealer, product) {
 }
 
 let currentConfig = null;
+let mWarrantyYears = 1;
+let mWarrantyIsNew = true; // '26년~ 납품 여부 (VBP only)
+
+function getWarrantyCost(config, years, isNew) {
+  if (!config) return 0;
+  const type = config.type;
+  const isHuman = config.dealer === 'human';
+  if (type === 'GMPP') {
+    if (years <= 1) return 0;
+    if (years === 2) return 9000000;
+    if (years >= 3) return 14000000;
+  }
+  if (type === 'VBP') {
+    if (years <= 1) return 0;
+    if (years === 2) return isNew ? 21000000 : 20000000;
+    if (years >= 3) return 27000000;
+  }
+  return 0;
+}
+
+function updateWarrantyUI() {
+  if (!currentConfig) return;
+  const type = currentConfig.type;
+  const cost = getWarrantyCost(currentConfig, mWarrantyYears, mWarrantyIsNew);
+  document.getElementById('warrantyVal').textContent = mWarrantyYears + '년';
+  
+  // Show/hide year toggle for VBP when years === 2
+  const toggle = document.getElementById('warrantyYearToggle');
+  if (type === 'VBP' && mWarrantyYears === 2) {
+    toggle.style.display = '';
+  } else {
+    toggle.style.display = 'none';
+  }
+  
+  // Note
+  let note = '';
+  if (cost === 0) note = '기본 포함 · 차감없음';
+  else note = '-' + Math.round(cost).toLocaleString('ko-KR') + '원 차감';
+  document.getElementById('warrantyNote').textContent = note;
+  
+  mWarranty = cost;
+  calc();
+}
 
 function renderWarrantyBtns(config, selectedVal) {
   const container = document.getElementById('warrantyBtns');
@@ -963,6 +1021,26 @@ function loadCalc(d, saved) {
 }
 
 document.getElementById('backTo1').addEventListener('click',()=>showStep(1));
+
+document.getElementById('warrantyMinus').addEventListener('click', () => {
+  if (mWarrantyYears > 1) { mWarrantyYears--; updateWarrantyUI(); }
+});
+document.getElementById('warrantyPlus').addEventListener('click', () => {
+  const max = currentConfig && currentConfig.type === 'VBP' ? 3 : 3;
+  if (mWarrantyYears < max) { mWarrantyYears++; updateWarrantyUI(); }
+});
+document.getElementById('toggleNew').addEventListener('click', () => {
+  mWarrantyIsNew = true;
+  document.getElementById('toggleNew').classList.add('active');
+  document.getElementById('toggleOld').classList.remove('active');
+  updateWarrantyUI();
+});
+document.getElementById('toggleOld').addEventListener('click', () => {
+  mWarrantyIsNew = false;
+  document.getElementById('toggleOld').classList.add('active');
+  document.getElementById('toggleNew').classList.remove('active');
+  updateWarrantyUI();
+});
 document.getElementById('backTo2').addEventListener('click',()=>{ renderCustomers(currentMonth, currentOwner); showStep(2); });
 
 document.getElementById('contractInput').addEventListener('input', function() {
