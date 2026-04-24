@@ -228,7 +228,9 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
   <div class="month-row" id="adminMonthRow" style="margin-bottom:16px;">
     <span class="month-lbl">지급월</span>
     <div id="adminMonthPills" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+    <button class="btn-sm primary" id="setActiveMonthBtn" style="margin-left:8px;">이 달 Staff 공개</button>
   </div>
+  <div id="activeMonthInfo" style="font-size:0.72rem;color:var(--muted);margin-bottom:16px;"></div>
 
   <!-- Owner filter -->
   <div class="owner-filter-row" id="ownerFilterRow"></div>
@@ -478,6 +480,8 @@ async function showAdmin() {
   await loadResults();
   renderAdminMonths();
   renderAdminTable();
+  const am = await getActiveMonth();
+  if (am) document.getElementById('activeMonthInfo').textContent = '✓ Staff 공개 월: ' + am.slice(0,4) + '.' + am.slice(4,6);
 }
 
 document.getElementById('goAdminBtn').addEventListener('click', () => {
@@ -493,6 +497,10 @@ document.getElementById('adminFileInput').addEventListener('change', e => {
 });
 
 document.getElementById('exportBtn').addEventListener('click', exportCSV);
+document.getElementById('setActiveMonthBtn').addEventListener('click', async () => {
+  if (!adminMonth) return;
+  await setActiveMonth(adminMonth);
+});
 document.getElementById('clearResultsBtn').addEventListener('click', async () => {
   if (confirm('모든 계산 결과를 삭제할까요?')) {
     try {
@@ -513,6 +521,22 @@ async function loadExcelData() {
     if (rows && rows.length) { allData = rows; localStorage.setItem(KEY_DATA, JSON.stringify(allData)); }
     else loadLocal();
   } catch(e) { loadLocal(); }
+}
+
+async function getActiveMonth() {
+  try {
+    const rows = await sbFetch('GET', '/rest/v1/excel_data?owner=eq.__active_month__&select=dealer');
+    if (rows && rows.length) return rows[0].dealer;
+  } catch(e) {}
+  return null;
+}
+
+async function setActiveMonth(month) {
+  try {
+    await sbFetch('DELETE', '/rest/v1/excel_data?owner=eq.__active_month__');
+    await sbFetch('POST', '/rest/v1/excel_data', {paydate: month, owner: '__active_month__', customer: '__active_month__', dealer: month, product: '', contract: 0, rate: 0});
+    document.getElementById('activeMonthInfo').textContent = '✓ Staff 공개 월: ' + month.slice(0,4) + '.' + month.slice(4,6);
+  } catch(e) { alert('설정 오류: '+e.message); }
 }
 
 async function loadResults() {
@@ -703,7 +727,9 @@ async function showUser() {
   document.getElementById('userPage').style.display = '';
   await loadExcelData();
   await loadResults();
-  const months = [...new Set(allData.map(d=>d.paydate))].sort((a,b)=>b-a);
+  const activeMonth = await getActiveMonth();
+  const allMonths = [...new Set(allData.map(d=>d.paydate))].sort((a,b)=>b-a);
+  const months = activeMonth ? allMonths.filter(m => m === activeMonth) : allMonths;
   renderUserMonths(months);
   if(months.length) { currentMonth = months[0]; renderOwners(months[0]); }
   else { document.getElementById('noDataState').style.display=''; document.getElementById('ownerGrid').innerHTML=''; }
