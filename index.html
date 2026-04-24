@@ -828,7 +828,8 @@ function getProductConfig(dealer, product) {
     ],
     warrantyGuide: '기본 1년 차감없음 · Add 1년 900만원 · Add 2년 1,400만원',
     dcdFree: 1,
-    dcdTable: [0,0,750000,1500000,2250000],
+    pricePerBox: 750000,
+    dcdTable: [],
     dcdGuide: '기본 1박스 차감없음 · 추가 1박스당 75만원',
   };
   if (!isHuman && isVBP) return {
@@ -842,7 +843,8 @@ function getProductConfig(dealer, product) {
     ],
     warrantyGuide: '기본 1년 차감없음 · Ext 2년 2,100만원 · Ext 3년 2,700만원',
     dcdFree: 1,
-    dcdTable: [0,0,750000,1500000,2250000,3000000],
+    pricePerBox: 750000,
+    dcdTable: [],
     dcdGuide: '기본 1박스 차감없음 · 추가 1박스당 75만원',
   };
   // fallback
@@ -883,8 +885,20 @@ function renderWarrantyBtns(config, selectedVal) {
 }
 
 function getDCDAmount(config, boxes) {
+  const free = config.dcdFree || 0;
+  const pricePerBox = config.pricePerBox || 0;
+  if (pricePerBox) {
+    const chargeable = Math.max(0, boxes - free);
+    return chargeable * pricePerBox;
+  }
   const t = config.dcdTable;
-  if (boxes >= t.length) return t[t.length-1];
+  if (boxes >= t.length) {
+    // extrapolate
+    const last = t[t.length-1];
+    const secondLast = t[t.length-2] || 0;
+    const step = last - secondLast;
+    return last + step * (boxes - t.length + 1);
+  }
   return t[boxes] || 0;
 }
 
