@@ -253,6 +253,8 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
           <th class="num">실적</th>
           <th>율</th>
           <th class="num">커미션 합계</th>
+          <th class="num">예상 커미션</th>
+          <th class="num">차이</th>
           <th>상태</th>
         </tr>
       </thead>
@@ -556,7 +558,7 @@ async function setActiveMonth(month) {
 
 async function loadResults() {
   try {
-    const rows = await sbFetch('GET', '/rest/v1/commission_results?select=*');
+    const rows = await sbFetch('GET', '/rest/v1/commission_results?select=*&order=saved_at.desc');
     results = {};
     rows.forEach(r => { const k = (r.paydate+'__'+r.owner+'__'+r.customer).replace(/\s+/g,'_'); results[k] = { contract:r.contract, dcd:r.dcd, warranty:r.warranty, rate:r.rate, actual:r.actual, total:r.total }; });
   } catch(e) { console.error('loadResults:', e); }
@@ -704,6 +706,24 @@ function renderAdminTable() {
       <td class="num">${s?fmt(s.actual):'—'}</td>
       <td>${s?(s.rate*100)+'%':'—'}</td>
       <td class="num total-cell">${s?fmt(s.total)+'원':'—'}</td>
+      <td class="num">
+        <input type="text" 
+          value="${s&&s.expected_total ? Math.round(s.expected_total).toLocaleString('ko-KR') : ''}"
+          placeholder="입력"
+          data-paydate="${r.paydate}" data-owner="${r.owner}" data-customer="${r.customer}"
+          style="width:100px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-family:var(--sans);font-size:0.72rem;text-align:right;background:var(--bg);"
+          onchange="saveExpected(this)"
+          onkeydown="if(event.key==='Enter')this.blur()"
+        >
+      </td>
+      <td class="num" style="font-size:0.72rem;">
+        ${s&&s.expected_total&&s.total ? (() => {
+          const diff = s.total - s.expected_total;
+          const pct = Math.round(Math.abs(diff)/s.expected_total*100);
+          if (Math.abs(diff) < 10000) return '<span style="color:var(--green);font-weight:600;">✓ 일치</span>';
+          return '<span style="color:' + (diff > 0 ? '#c84b2f' : '#2d5a3d') + ';">' + (diff > 0 ? '+' : '') + Math.round(diff).toLocaleString('ko-KR') + '<br><span style="font-size:0.65rem;opacity:0.7;">' + (diff > 0 ? '↑' : '↓') + pct + '%</span></span>';
+        })() : '—'}
+      </td>
       <td>
         <span class="status-badge ${s?'status-saved':'status-pending'}">${s?'저장됨':'미완료'}</span>
         ${s?`<button onclick="deleteResult('${r.paydate}','${r.owner}','${r.customer}')" style="margin-left:8px;background:none;border:none;cursor:pointer;color:#c84b2f;font-size:0.7rem;font-family:var(--sans);padding:2px 6px;border-radius:4px;border:1px solid #f0c0b0;" onmouseover="this.style.background='#fdf0ed'" onmouseout="this.style.background='none'">삭제</button>`:''}
@@ -1095,6 +1115,23 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
     btn.disabled = false;
   }
 });
+
+async function saveExpected(input) {
+  const paydate = input.dataset.paydate;
+  const owner = input.dataset.owner;
+  const customer = input.dataset.customer;
+  const val = parseInt(input.value.replace(/[^0-9]/g, '')) || null;
+  input.value = val ? val.toLocaleString('ko-KR') : '';
+  try {
+    await sbFetch('PATCH', `/rest/v1/commission_results?paydate=eq.${paydate}&owner=eq.${encodeURIComponent(owner)}&customer=eq.${encodeURIComponent(customer)}`, {
+      expected_total: val
+    });
+    // Update local results
+    const key = resultKey(paydate, owner, customer);
+    if (results[key]) { results[key].expected_total = val; }
+    renderAdminTable();
+  } catch(e) { alert('저장 오류: '+e.message); }
+}
 
 async function deleteResult(paydate, owner, customer) {
   if (!confirm(`${customer} 결과를 삭제할까요?`)) return;
