@@ -16,7 +16,7 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; padding: 48px 24px; font-size: 14px; }
-.wrap { max-width: 700px; margin: 0 auto; }
+.wrap { max-width: 1100px; margin: 0 auto; }
 h1 { font-family: var(--serif); font-size: 2rem; font-weight: 400; letter-spacing: -0.03em; margin-bottom: 2px; line-height: 1.15; }
 .subtitle { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 40px; text-transform: uppercase; }
 
@@ -704,7 +704,7 @@ function renderAdminTable() {
       <td class="num">${s&&s.dcd>0?'-'+fmt(s.dcd*750000):'—'}</td>
       <td class="num">${s&&s.warranty>0?'-'+fmt(s.warranty):'—'}</td>
       <td class="num">${s?fmt(s.actual):'—'}</td>
-      <td>${s?(s.rate*100)+'%':'—'}</td>
+      <td>${s?(Math.round(s.rate*100))+'%':'—'}</td>
       <td class="num total-cell">${s?fmt(s.total)+'원':'—'}</td>
       <td class="num">
         <input type="text" 
