@@ -1002,7 +1002,6 @@ function loadCalc(d, saved) {
   document.getElementById('selAmount').textContent = fmt(d.contract);
   document.getElementById('selProduct').textContent = d.product||'';
   document.getElementById('selYyyymm').textContent = d.yyyymm ? d.yyyymm.slice(0,4)+'.'+d.yyyymm.slice(4,6) : '—';
-  document.getElementById('selPaydate').textContent = d.paydate ? d.paydate.slice(0,4)+'.'+d.paydate.slice(4,6) : '—';
 
   currentConfig = getProductConfig(d.dealer, d.product);
 
