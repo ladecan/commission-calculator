@@ -77,7 +77,7 @@ h1 { font-family: var(--serif); font-size: 2rem; font-weight: 400; letter-spacin
 
 /* Calc card */
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 28px; }
-.prefilled { background: var(--green-light); border-radius: 6px; padding: 14px 18px; margin-bottom: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; border-left: 3px solid var(--green); }
+.prefilled { background: var(--green-light); border-radius: 6px; padding: 14px 18px; margin-bottom: 28px; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; border-left: 3px solid var(--green); }
 .prefilled .lbl { font-size: 0.65rem; color: var(--green); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 4px; font-weight: 500; }
 .prefilled .val { font-size: 0.9rem; font-weight: 600; color: var(--text); }
 .prefilled .sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
@@ -329,6 +329,14 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
           <div class="lbl">제품 · 총 계약금액</div>
           <div class="val" id="selAmount">—</div>
           <div class="sub" id="selProduct">—</div>
+        </div>
+        <div>
+          <div class="lbl">납품월</div>
+          <div class="val" id="selYyyymm">—</div>
+        </div>
+        <div>
+          <div class="lbl">지급월</div>
+          <div class="val" id="selPaydate">—</div>
         </div>
       </div>
       <div class="row">
@@ -996,6 +1004,8 @@ function loadCalc(d, saved) {
   document.getElementById('selDealer').textContent = d.dealer||'';
   document.getElementById('selAmount').textContent = fmt(d.contract);
   document.getElementById('selProduct').textContent = d.product||'';
+  document.getElementById('selYyyymm').textContent = d.yyyymm ? d.yyyymm.slice(0,4)+'.'+d.yyyymm.slice(4,6) : '—';
+  document.getElementById('selPaydate').textContent = d.paydate ? d.paydate.slice(0,4)+'.'+d.paydate.slice(4,6) : '—';
 
   currentConfig = getProductConfig(d.dealer, d.product);
 
