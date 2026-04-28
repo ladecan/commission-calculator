@@ -1016,9 +1016,11 @@ function loadCalc(d, saved) {
 
   currentConfig = getProductConfig(d.dealer, d.product);
 
+  const realSaved = saved && saved.total > 0 ? saved : null;
+  if(realSaved) { saved = realSaved; } else { saved = null; }
   if(saved) {
     mDCD = saved.dcd; mWarranty = saved.warranty; mRate = saved.rate;
-    document.getElementById('contractInput').value = parseInt(saved.contract).toLocaleString('ko-KR');
+    document.getElementById('contractInput').value = saved.contract ? parseInt(saved.contract).toLocaleString('ko-KR') : '';
     document.getElementById('dcdVal').textContent = mDCD;
     updateDCD();
     document.querySelectorAll('.rate-btn').forEach(b => b.classList.toggle('active', parseFloat(b.dataset.rate)===mRate));
