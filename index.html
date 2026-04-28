@@ -566,7 +566,7 @@ async function loadResults() {
   try {
     const rows = await sbFetch('GET', '/rest/v1/commission_results?select=*&order=saved_at.desc');
     results = {};
-    rows.forEach(r => { const k = (r.paydate+'__'+r.owner+'__'+r.customer).replace(/\s+/g,'_'); results[k] = { contract:r.contract, dcd:r.dcd, warranty:r.warranty, rate:r.rate, actual:r.actual, total:r.total }; });
+    rows.forEach(r => { const k = (r.paydate+'__'+r.owner+'__'+r.customer).replace(/\s+/g,'_'); results[k] = { contract:r.contract, dcd:r.dcd, warranty:r.warranty, rate:r.rate, actual:r.actual, total:r.total, expected_total:r.expected_total }; });
   } catch(e) { console.error('loadResults:', e); }
 }
 
@@ -681,8 +681,10 @@ function renderAdminTable() {
   const filtered = monthData.filter(d => !adminOwnerFilter || d.owner === adminOwnerFilter);
   const rows = filtered.map(d => {
     const key = resultKey(d.paydate, d.owner, d.customer);
-    const saved = results[key];
-    return { ...d, saved };
+    const r2 = results[key];
+    const saved = r2 && r2.total > 0 ? r2 : null;
+    const expectedOnly = r2 && r2.total === 0 ? r2 : null;
+    return { ...d, saved, expectedOnly };
   });
 
   // Summary
@@ -716,7 +718,7 @@ function renderAdminTable() {
       <td class="num total-cell">${s?fmt(s.total)+'원':'—'}</td>
       <td class="num">
         <input type="text" 
-          value="${s&&s.expected_total ? Math.round(s.expected_total).toLocaleString('ko-KR') : ''}"
+          value="${(s&&s.expected_total)||(r.expectedOnly&&r.expectedOnly.expected_total) ? Math.round((s&&s.expected_total)||(r.expectedOnly&&r.expectedOnly.expected_total)).toLocaleString('ko-KR') : ''}"
           placeholder="입력"
           data-paydate="${r.paydate}" data-owner="${r.owner}" data-customer="${r.customer}"
           style="width:100px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-family:var(--sans);font-size:0.72rem;text-align:right;background:var(--bg);"
@@ -1179,13 +1181,22 @@ async function saveExpected(input) {
   const val = parseInt(input.value.replace(/[^0-9]/g, '')) || null;
   input.value = val ? val.toLocaleString('ko-KR') : '';
   try {
-    await sbFetch('PATCH', `/rest/v1/commission_results?paydate=eq.${paydate}&owner=eq.${encodeURIComponent(owner)}&customer=eq.${encodeURIComponent(customer)}`, {
-      expected_total: val
-    });
-    // Update local results
     const key = resultKey(paydate, owner, customer);
-    if (results[key]) { results[key].expected_total = val; }
-    // 차이 칸만 업데이트
+    const existing = await sbFetch('GET', `/rest/v1/commission_results?paydate=eq.${paydate}&owner=eq.${encodeURIComponent(owner)}&customer=eq.${encodeURIComponent(customer)}&select=id`);
+    if (existing && existing.length > 0) {
+      await sbFetch('PATCH', `/rest/v1/commission_results?paydate=eq.${paydate}&owner=eq.${encodeURIComponent(owner)}&customer=eq.${encodeURIComponent(customer)}`, {
+        expected_total: val
+      });
+    } else {
+      // row 없으면 새로 만들기 (예상값만)
+      await sbFetch('POST', '/rest/v1/commission_results', {
+        paydate, owner, customer, expected_total: val,
+        contract: 0, dcd: 0, warranty: 0, rate: 0, actual: 0, total: 0
+      });
+    }
+    if (!results[key]) results[key] = {};
+    results[key].expected_total = val;
+    // 차이 칸 업데이트
     const tr = input.closest('tr');
     if (tr && results[key] && results[key].total) {
       const diffCell = tr.cells[tr.cells.length - 2];
