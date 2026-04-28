@@ -351,7 +351,10 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
             </div>
             <div class="step-note" id="dcdNote">차감 없음</div>
           </div>
-          <div id="dcdGuide" style="font-size:0.7rem;color:var(--muted);line-height:1.8;padding-top:10px;"></div>
+          <div style="display:flex;flex-direction:column;gap:4px;padding-top:10px;">
+            <div id="dcdGuide" style="font-size:0.7rem;color:var(--muted);line-height:1.8;"></div>
+            <div id="humanBadge" style="display:none;font-size:0.68rem;background:#fff3cd;color:#856404;border-radius:4px;padding:2px 8px;width:fit-content;font-weight:500;">🏢 휴먼홀딩스 기준 적용</div>
+          </div>
         </div>
       </div>
       <div class="row" id="warrantyRow">
@@ -1040,6 +1043,7 @@ function loadCalc(d, saved) {
   }
   if (currentConfig) {
     document.getElementById('dcdGuide').textContent = currentConfig.dcdGuide || '';
+    document.getElementById('humanBadge').style.display = currentConfig.dealer === 'human' ? '' : 'none';
     updateDCD();
     updateWarrantyUI();
   }
