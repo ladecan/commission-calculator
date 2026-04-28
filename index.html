@@ -932,7 +932,7 @@ function getProductConfig(dealer, product) {
 }
 
 let currentConfig = null;
-let mWarrantyYears = 1;
+let mWarrantyYears = 0;
 let mWarrantyIsNew = true; // '26년~ 납품 여부 (VBP only)
 
 function getWarrantyCost(config, years, isNew) {
@@ -1061,8 +1061,9 @@ document.getElementById('warrantyPlus').addEventListener('click', () => {
   if (!currentConfig) return;
   const isVBP = currentConfig.type === 'VBP';
   if (isVBP) {
-    if (mWarrantyYears === 1) mWarrantyYears = 3;
-    else if (mWarrantyYears < 4) mWarrantyYears = 4;
+    if (mWarrantyYears === 0) mWarrantyYears = 1;
+    else if (mWarrantyYears === 1) mWarrantyYears = 3;
+    else if (mWarrantyYears === 3) mWarrantyYears = 4;
   } else {
     if (mWarrantyYears < 3) mWarrantyYears++;
   }
