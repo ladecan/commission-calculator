@@ -944,6 +944,7 @@ function getWarrantyCost(config, years, isNew) {
     if (years === 2) return 9000000;
     if (years >= 3) return 14000000;
   }
+  // already correct
   if (type === 'VBP') {
     if (years <= 1) return 0;
     if (years === 3) return isNew ? 21000000 : 20000000;
