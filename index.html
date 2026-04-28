@@ -816,7 +816,7 @@ function renderOwners(month) {
   grid.innerHTML = '';
   document.getElementById('noDataState').style.display = Object.keys(ownerCounts).length ? 'none' : '';
   Object.entries(ownerCounts).sort().forEach(([owner, cnt]) => {
-    const savedCount = rows.filter(d=>d.owner===owner && results[resultKey(d.paydate, d.owner, d.customer)]).length;
+    const savedCount = rows.filter(d=>d.owner===owner && results[resultKey(d.paydate, d.owner, d.customer)] && results[resultKey(d.paydate, d.owner, d.customer)].total > 0).length;
     const btn = document.createElement('button');
     btn.className = 'owner-btn' + (savedCount ? ' has-saved' : '');
     btn.innerHTML = `<div class="name">${owner}</div><div class="count">${cnt}건${savedCount?' · ✓ '+savedCount+'건 저장':''}</div>`;
@@ -836,7 +836,7 @@ function renderCustomers(month, owner) {
   list.innerHTML = '';
   rows.forEach(d => {
     const key = resultKey(d.paydate, d.owner, d.customer);
-    const saved = results[key];
+    const saved = results[key] && results[key].total > 0 ? results[key] : null;
     const card = document.createElement('div');
     card.className = 'list-card' + (saved ? ' has-saved' : '');
     card.innerHTML = `
