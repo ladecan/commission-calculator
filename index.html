@@ -941,7 +941,8 @@ function getWarrantyCost(config, years, isNew) {
   const isHuman = config.dealer === 'human';
   if (type === 'GMPP') {
     if (years <= 1) return 0;
-    if (years >= 2) return 0; // 연도 표기용만, 차감 없음
+    if (years === 2) return 9000000;
+    if (years >= 3) return 14000000;
   }
   if (type === 'VBP') {
     if (years <= 1) return 0;
