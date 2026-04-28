@@ -944,7 +944,6 @@ function getWarrantyCost(config, years, isNew) {
     if (years === 2) return 9000000;
     if (years >= 3) return 14000000;
   }
-  // already correct
   if (type === 'VBP') {
     if (years <= 1) return 0;
     if (years === 3) return isNew ? 21000000 : 20000000;
@@ -967,7 +966,7 @@ function updateWarrantyUI() {
   if (warrantyRow) warrantyRow.style.display = '';
 
   const cost = getWarrantyCost(currentConfig, mWarrantyYears, mWarrantyIsNew);
-  document.getElementById('warrantyVal').textContent = (type === 'GMPP' && mWarrantyYears === 0) ? '없음' : mWarrantyYears + '년';
+  document.getElementById('warrantyVal').textContent = mWarrantyYears + '년';
   
   // Show/hide year toggle for VBP when years >= 3
   const toggle = document.getElementById('warrantyYearToggle');
@@ -1022,10 +1021,12 @@ function loadCalc(d, saved) {
     updateDCD();
     document.querySelectorAll('.rate-btn').forEach(b => b.classList.toggle('active', parseFloat(b.dataset.rate)===mRate));
     document.getElementById('rateGuide').textContent = '10%: TMI · Innomed · SevenU / 7%: 그 외';
+    mWarrantyYears = 0; mWarrantyIsNew = true;
+    updateWarrantyUI();
     document.getElementById('saveNote').textContent = '✓ 이미 저장된 데이터입니다. 수정 후 다시 저장 가능합니다.';
     document.getElementById('saveBtn').textContent = '결과 다시 저장하기';
   } else {
-    mDCD=0; mWarranty=0; mRate=getDealerRate(d.dealer);
+    mDCD=0; mWarranty=0; mWarrantyYears=0; mWarrantyIsNew=true; mRate=getDealerRate(d.dealer);
     document.getElementById('contractInput').value = d.contract ? parseInt(d.contract).toLocaleString('ko-KR') : '';
     document.getElementById('dcdVal').textContent='0';
     document.getElementById('dcdNote').textContent='차감 없음';
@@ -1033,6 +1034,10 @@ function loadCalc(d, saved) {
     document.getElementById('rateGuide').textContent = '10%: TMI · Innomed · SevenU / 7%: 그 외';
     document.getElementById('saveNote').textContent = '';
     document.getElementById('saveBtn').textContent = '이 결과 저장하기';
+  }
+  if (currentConfig) {
+    document.getElementById('dcdGuide').textContent = currentConfig.dcdGuide || '';
+    updateWarrantyUI();
   }
   calc();
   showStep(3);
@@ -1042,14 +1047,25 @@ document.getElementById('backTo1').addEventListener('click',()=>showStep(1));
 
 document.getElementById('warrantyMinus').addEventListener('click', () => {
   if (!currentConfig) return;
-  if (mWarrantyYears === 4) mWarrantyYears = 3;
-  else if (mWarrantyYears === 3) mWarrantyYears = 1;
+  const isVBP = currentConfig.type === 'VBP';
+  if (isVBP) {
+    if (mWarrantyYears === 4) mWarrantyYears = 3;
+    else if (mWarrantyYears === 3) mWarrantyYears = 1;
+    else if (mWarrantyYears > 0) mWarrantyYears--;
+  } else {
+    if (mWarrantyYears > 0) mWarrantyYears--;
+  }
   updateWarrantyUI();
 });
 document.getElementById('warrantyPlus').addEventListener('click', () => {
   if (!currentConfig) return;
-  if (mWarrantyYears === 1) mWarrantyYears = 3;
-  else if (mWarrantyYears === 3) mWarrantyYears = 4;
+  const isVBP = currentConfig.type === 'VBP';
+  if (isVBP) {
+    if (mWarrantyYears === 1) mWarrantyYears = 3;
+    else if (mWarrantyYears < 4) mWarrantyYears = 4;
+  } else {
+    if (mWarrantyYears < 3) mWarrantyYears++;
+  }
   updateWarrantyUI();
 });
 document.getElementById('toggleNew').addEventListener('click', () => {
