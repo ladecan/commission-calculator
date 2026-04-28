@@ -1115,12 +1115,27 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
   const tax=comm*0.1;
   const total=Math.round(comm+tax);
   const btn = document.getElementById('saveBtn');
+
+  // Check against admin expected amount
+  const key0 = resultKey(currentRow.paydate, currentRow.owner, currentRow.customer);
+  const existingResult = results[key0];
+  if (existingResult && existingResult.expected_total) {
+    const diff = Math.abs(total - existingResult.expected_total);
+    const pct = Math.round(diff / existingResult.expected_total * 100);
+    if (diff > 10000) {
+      const adminFmt = Math.round(existingResult.expected_total).toLocaleString('ko-KR');
+      const myFmt = total.toLocaleString('ko-KR');
+      const msg = `⚠️ 관리자 예상 금액과 다릅니다.\n\n관리자 예상: ${adminFmt}원\n내 계산: ${myFmt}원\n차이: ${diff > 0 ? '+' : ''}${(total - existingResult.expected_total).toLocaleString('ko-KR')}원 (${pct}%)\n\n그래도 저장할까요?`;
+      if (!confirm(msg)) return;
+    }
+  }
+
   btn.disabled = true; btn.textContent = '저장 중...';
   try {
-    const existing = await sbFetch('GET', `/rest/v1/commission_results?paydate=eq.${currentRow.paydate}&owner=eq.${encodeURIComponent(currentRow.owner)}&customer=eq.${encodeURIComponent(currentRow.customer)}&select=id`);
+    const existing = await sbFetch('GET', `/rest/v1/commission_results?paydate=eq.${currentRow.paydate}&owner=eq.${encodeURIComponent(currentRow.owner)}&customer=eq.${encodeURIComponent(currentRow.customer)}&select=id,expected_total`);
     if (existing && existing.length > 0) {
       await sbFetch('PATCH', `/rest/v1/commission_results?paydate=eq.${currentRow.paydate}&owner=eq.${encodeURIComponent(currentRow.owner)}&customer=eq.${encodeURIComponent(currentRow.customer)}`, {
-        contract, dcd:mDCD, warranty:mWarranty, rate:mRate, actual:Math.round(actual), total
+        contract, dcd:mDCD, warranty:mWarranty, rate:mRate, actual:Math.round(actual), total, saved_at: new Date().toISOString()
       });
     } else {
       await sbFetch('POST', '/rest/v1/commission_results', {
