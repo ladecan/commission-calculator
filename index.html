@@ -354,7 +354,7 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
           <div id="dcdGuide" style="font-size:0.7rem;color:var(--muted);line-height:1.8;padding-top:10px;"></div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" id="warrantyRow">
         <span class="field-label">워런티 (Extended Warranty)</span>
         <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;">
           <div>
@@ -941,8 +941,7 @@ function getWarrantyCost(config, years, isNew) {
   const isHuman = config.dealer === 'human';
   if (type === 'GMPP') {
     if (years <= 1) return 0;
-    if (years === 2) return 9000000;
-    if (years >= 3) return 14000000;
+    if (years >= 2) return 0; // 연도 표기용만, 차감 없음
   }
   if (type === 'VBP') {
     if (years <= 1) return 0;
@@ -955,18 +954,27 @@ function getWarrantyCost(config, years, isNew) {
 function updateWarrantyUI() {
   if (!currentConfig) return;
   const type = currentConfig.type;
+
+  const warrantyRow = document.getElementById('warrantyRow');
+  if (type === 'OTHER') {
+    if (warrantyRow) warrantyRow.style.display = 'none';
+    mWarranty = 0;
+    calc();
+    return;
+  }
+  if (warrantyRow) warrantyRow.style.display = '';
+
   const cost = getWarrantyCost(currentConfig, mWarrantyYears, mWarrantyIsNew);
-  document.getElementById('warrantyVal').textContent = mWarrantyYears + '년';
+  document.getElementById('warrantyVal').textContent = (type === 'GMPP' && mWarrantyYears === 0) ? '없음' : mWarrantyYears + '년';
   
-  // Show/hide year toggle for VBP when years === 2
+  // Show/hide year toggle for VBP when years >= 3
   const toggle = document.getElementById('warrantyYearToggle');
-  if (type === 'VBP' && mWarrantyYears >= 2) {
+  if (type === 'VBP' && mWarrantyYears >= 3) {
     toggle.style.display = '';
   } else {
     toggle.style.display = 'none';
   }
   
-  // Note
   let note = '';
   if (cost === 0) note = '기본 포함 · 차감없음';
   else note = '-' + Math.round(cost).toLocaleString('ko-KR') + '원 차감';
@@ -1032,24 +1040,14 @@ document.getElementById('backTo1').addEventListener('click',()=>showStep(1));
 
 document.getElementById('warrantyMinus').addEventListener('click', () => {
   if (!currentConfig) return;
-  const isVBP = currentConfig.type === 'VBP';
-  if (isVBP) {
-    if (mWarrantyYears === 4) mWarrantyYears = 3;
-    else if (mWarrantyYears === 3) mWarrantyYears = 1;
-  } else {
-    if (mWarrantyYears > 1) mWarrantyYears--;
-  }
+  if (mWarrantyYears === 4) mWarrantyYears = 3;
+  else if (mWarrantyYears === 3) mWarrantyYears = 1;
   updateWarrantyUI();
 });
 document.getElementById('warrantyPlus').addEventListener('click', () => {
   if (!currentConfig) return;
-  const isVBP = currentConfig.type === 'VBP';
-  if (isVBP) {
-    if (mWarrantyYears === 1) mWarrantyYears = 3;
-    else if (mWarrantyYears === 3) mWarrantyYears = 4;
-  } else {
-    if (mWarrantyYears < 3) mWarrantyYears++;
-  }
+  if (mWarrantyYears === 1) mWarrantyYears = 3;
+  else if (mWarrantyYears === 3) mWarrantyYears = 4;
   updateWarrantyUI();
 });
 document.getElementById('toggleNew').addEventListener('click', () => {
