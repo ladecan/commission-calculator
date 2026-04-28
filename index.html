@@ -1147,10 +1147,12 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
   if (existingResult && existingResult.expected_total) {
     const diff = Math.abs(total - existingResult.expected_total);
     const pct = Math.round(diff / existingResult.expected_total * 100);
-    if (diff > 10000) {
+    if (diff <= 10000) {
+      alert('✅ 관리자 예상 금액과 일치합니다!\n\n예상: ' + Math.round(existingResult.expected_total).toLocaleString('ko-KR') + '원\n내 계산: ' + total.toLocaleString('ko-KR') + '원');
+    } else {
       const adminFmt = Math.round(existingResult.expected_total).toLocaleString('ko-KR');
       const myFmt = total.toLocaleString('ko-KR');
-      const msg = `⚠️ 관리자 예상 금액과 다릅니다.\n\n관리자 예상: ${adminFmt}원\n내 계산: ${myFmt}원\n차이: ${diff > 0 ? '+' : ''}${(total - existingResult.expected_total).toLocaleString('ko-KR')}원 (${pct}%)\n\n그래도 저장할까요?`;
+      const msg = `⚠️ 관리자 예상 금액과 다릅니다.\n\n관리자 예상: ${adminFmt}원\n내 계산: ${myFmt}원\n차이: ${(total - existingResult.expected_total) > 0 ? '+' : ''}${(total - existingResult.expected_total).toLocaleString('ko-KR')}원 (${pct}%)\n\n그래도 저장할까요?`;
       if (!confirm(msg)) return;
     }
   }
