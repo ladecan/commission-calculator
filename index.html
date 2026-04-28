@@ -1171,7 +1171,8 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
       });
     }
     const key = currentRow.paydate+'__'+currentRow.owner+'__'+currentRow.customer;
-    results[key] = { contract, dcd:mDCD, warranty:mWarranty, rate:mRate, actual:Math.round(actual), total };
+    const prevExpected = results[key] ? results[key].expected_total : null;
+    results[key] = { contract, dcd:mDCD, warranty:mWarranty, rate:mRate, actual:Math.round(actual), total, expected_total: prevExpected };
     document.getElementById('saveNote').textContent = '✓ 저장되었습니다.';
     btn.textContent = '결과 다시 저장하기';
     btn.disabled = false;
