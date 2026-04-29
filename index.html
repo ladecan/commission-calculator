@@ -1799,6 +1799,7 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
     btn.textContent = '결과 다시 저장하기';
     btn.disabled = false;
     document.getElementById('cancelBtn').style.display = '';
+    renderOwners(currentMonth);
   } catch(e) {
     document.getElementById('saveNote').textContent = '⚠ 저장 실패: '+e.message;
     btn.textContent = '이 결과 저장하기';
