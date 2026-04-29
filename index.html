@@ -697,6 +697,7 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
         <div class="result-row result-total"><span class="r-label">최종 커미션 합계 (VAT 포함)</span><span class="r-val dim" id="rTotal">—</span></div>
       </div>
       <button class="save-btn" id="saveBtn">이 결과 저장하기</button>
+      <button class="save-btn" id="cancelBtn" style="display:none;background:transparent;border:1px solid var(--border);color:var(--muted);margin-top:8px;">저장 취소</button>
       <p class="save-note" id="saveNote"></p>
     </div>
   </div>
@@ -1625,6 +1626,7 @@ function loadCalc(d, saved) {
     updateWarrantyUI();
     document.getElementById('saveNote').textContent = '✓ 이미 저장된 데이터입니다. 수정 후 다시 저장 가능합니다.';
     document.getElementById('saveBtn').textContent = '결과 다시 저장하기';
+    document.getElementById('cancelBtn').style.display = '';
   } else {
     mDCD=0; mWarranty=0; mWarrantyYears=0; mWarrantyIsNew=true; mRate=getDealerRate(d.dealer);
     document.getElementById('contractInput').value = d.contract ? parseInt(d.contract).toLocaleString('ko-KR') : '';
@@ -1633,6 +1635,7 @@ function loadCalc(d, saved) {
     document.getElementById('rateGuide').textContent = '10%: TMI · Innomed · SevenU / 7%: 그 외';
     document.getElementById('saveNote').textContent = '';
     document.getElementById('saveBtn').textContent = '이 결과 저장하기';
+    document.getElementById('cancelBtn').style.display = 'none';
   }
   if (currentConfig) {
     document.getElementById('dcdGuide').textContent = currentConfig.dcdGuide || '';
@@ -1645,6 +1648,20 @@ function loadCalc(d, saved) {
 }
 
 document.getElementById('backTo1').addEventListener('click',()=>showStep(1));
+
+document.getElementById('cancelBtn').addEventListener('click', async () => {
+  if (!currentRow) return;
+  if (!confirm('저장된 결과를 취소할까요?')) return;
+  try {
+    await sbFetch('DELETE', `/rest/v1/commission_results?paydate=eq.${currentRow.paydate}&owner=eq.${encodeURIComponent(currentRow.owner)}&customer=eq.${encodeURIComponent(currentRow.customer)}`);
+    const key = resultKey(currentRow.paydate, currentRow.owner, currentRow.customer);
+    delete results[key];
+    document.getElementById('saveNote').textContent = '저장이 취소되었습니다.';
+    document.getElementById('saveBtn').textContent = '이 결과 저장하기';
+    document.getElementById('cancelBtn').style.display = 'none';
+    calc();
+  } catch(e) { alert('오류: '+e.message); }
+});
 
 document.getElementById('warrantyMinus').addEventListener('click', () => {
   if (!currentConfig) return;
@@ -1769,6 +1786,7 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
     document.getElementById('saveNote').textContent = '✓ 저장되었습니다.';
     btn.textContent = '결과 다시 저장하기';
     btn.disabled = false;
+    document.getElementById('cancelBtn').style.display = '';
   } catch(e) {
     document.getElementById('saveNote').textContent = '⚠ 저장 실패: '+e.message;
     btn.textContent = '이 결과 저장하기';
