@@ -179,10 +179,12 @@ tbody td.total-cell { font-weight: 500; color: var(--accent); }
 
 footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top: 40px; }
 
+
+
 /* ── Guide styles ── */
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
+#guidePage * { box-sizing: border-box; margin: 0; padding: 0; }
+#guidePage :root {
   --black: #111;
   --white: #fff;
   --green: #1a4a2e;
@@ -192,7 +194,7 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
   --muted: #888;
   --border: #e0e0e0;
 }
-body {
+#guidePage body {
   font-family: 'Noto Sans KR', sans-serif;
   background: var(--white);
   color: var(--black);
@@ -200,7 +202,7 @@ body {
 }
 
 /* HERO */
-.hero {
+#guidePage .hero {
   background: var(--black);
   color: var(--white);
   padding: 80px 24px 64px;
@@ -208,14 +210,14 @@ body {
   position: relative;
   overflow: hidden;
 }
-.hero::before {
+#guidePage .hero::before {
   content: '';
   position: absolute;
   inset: 0;
   background: radial-gradient(ellipse at 30% 50%, #1a4a2e44 0%, transparent 60%),
               radial-gradient(ellipse at 70% 30%, #f5e64222 0%, transparent 50%);
 }
-.hero-badge {
+#guidePage .hero-badge {
   display: inline-block;
   background: var(--yellow);
   color: var(--black);
@@ -227,7 +229,7 @@ body {
   margin-bottom: 20px;
   position: relative;
 }
-.hero h1 {
+#guidePage .hero h1 {
   font-size: clamp(2rem, 6vw, 3.5rem);
   font-weight: 900;
   letter-spacing: -0.04em;
@@ -235,8 +237,8 @@ body {
   margin-bottom: 16px;
   position: relative;
 }
-.hero h1 span { color: var(--yellow); }
-.hero p {
+#guidePage .hero h1 span { color: var(--yellow); }
+#guidePage .hero p {
   font-size: 1rem;
   color: rgba(255,255,255,0.6);
   max-width: 480px;
@@ -245,12 +247,12 @@ body {
 }
 
 /* SECTION */
-.section {
+#guidePage .section {
   padding: 64px 24px;
   max-width: 720px;
   margin: 0 auto;
 }
-.section-label {
+#guidePage .section-label {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -261,7 +263,7 @@ body {
   color: var(--muted);
   margin-bottom: 32px;
 }
-.section-label::before {
+#guidePage .section-label::before {
   content: '';
   display: block;
   width: 24px;
@@ -270,8 +272,8 @@ body {
 }
 
 /* STEPS */
-.steps { display: flex; flex-direction: column; gap: 0; }
-.step {
+#guidePage .steps { display: flex; flex-direction: column; gap: 0; }
+#guidePage .step {
   display: flex;
   gap: 24px;
   padding: 28px 0;
@@ -281,9 +283,9 @@ body {
   transform: translateY(20px);
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
-.step.visible { opacity: 1; transform: translateY(0); }
-.step:last-child { border-bottom: none; }
-.step-num {
+#guidePage .step.visible { opacity: 1; transform: translateY(0); }
+#guidePage .step:last-child { border-bottom: none; }
+#guidePage .step-num {
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -296,19 +298,19 @@ body {
   font-weight: 900;
   flex-shrink: 0;
 }
-.step-content { flex: 1; }
-.step-content h3 {
+#guidePage .step-content { flex: 1; }
+#guidePage .step-content h3 {
   font-size: 1.1rem;
   font-weight: 700;
   margin-bottom: 8px;
   letter-spacing: -0.02em;
 }
-.step-content p {
+#guidePage .step-content p {
   font-size: 0.9rem;
   color: #555;
   line-height: 1.7;
 }
-.step-content .tip {
+#guidePage .step-content .tip {
   margin-top: 12px;
   background: var(--yellow);
   display: inline-block;
@@ -320,60 +322,60 @@ body {
 }
 
 /* MOCK UI */
-.mock {
+#guidePage .mock {
   background: #f5f2ec;
   border-radius: 16px;
   padding: 24px;
   margin: 12px 0 0;
 }
-.mock-title {
+#guidePage .mock-title {
   font-size: 0.65rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #8a847a;
   margin-bottom: 12px;
 }
-.mock-owner-grid {
+#guidePage .mock-owner-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
-.mock-owner {
+#guidePage .mock-owner {
   background: white;
   border-radius: 8px;
   padding: 12px 14px;
   border: 1.5px solid #e0dbd0;
 }
-.mock-owner .n { font-size: 0.82rem; font-weight: 600; margin-bottom: 2px; }
-.mock-owner .c { font-size: 0.65rem; color: #8a847a; }
-.mock-owner.active { border-color: #1a4a2e; background: #e8f0eb; }
-.mock-owner.active .n { color: #1a4a2e; }
+#guidePage .mock-owner .n { font-size: 0.82rem; font-weight: 600; margin-bottom: 2px; }
+#guidePage .mock-owner .c { font-size: 0.65rem; color: #8a847a; }
+#guidePage .mock-owner.active { border-color: #1a4a2e; background: #e8f0eb; }
+#guidePage .mock-owner.active .n { color: #1a4a2e; }
 
-.mock-result {
+#guidePage .mock-result {
   background: #111;
   color: white;
   border-radius: 10px;
   padding: 16px 18px;
   margin-top: 12px;
 }
-.mock-result-row {
+#guidePage .mock-result-row {
   display: flex;
   justify-content: space-between;
   padding: 5px 0;
   font-size: 0.78rem;
   border-bottom: 1px solid rgba(255,255,255,0.07);
 }
-.mock-result-row:last-child {
+#guidePage .mock-result-row:last-child {
   border-bottom: none;
   padding-top: 10px;
   border-top: 1px solid rgba(255,255,255,0.15);
   margin-top: 4px;
 }
-.mock-result-row .lbl { opacity: 0.4; }
-.mock-result-row .val { font-weight: 600; }
-.mock-result-row.total .val { color: #7ec89a; font-size: 1rem; }
+#guidePage .mock-result-row .lbl { opacity: 0.4; }
+#guidePage .mock-result-row .val { font-weight: 600; }
+#guidePage .mock-result-row.total .val { color: #7ec89a; font-size: 1rem; }
 
-.mock-save-btn {
+#guidePage .mock-save-btn {
   width: 100%;
   margin-top: 10px;
   padding: 11px;
@@ -389,41 +391,41 @@ body {
 }
 
 /* IMPORTANT BOXES */
-.important-grid {
+#guidePage .important-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-top: 8px;
 }
 @media (max-width: 480px) {
-  .important-grid { grid-template-columns: 1fr; }
-  .mock-owner-grid { grid-template-columns: 1fr; }
+  #guidePage .important-grid { grid-template-columns: 1fr; }
+  #guidePage .mock-owner-grid { grid-template-columns: 1fr; }
 }
-.important-box {
+#guidePage .important-box {
   border-radius: 12px;
   padding: 20px;
   border: 2px solid var(--border);
 }
-.important-box.warn {
+#guidePage .important-box.warn {
   background: #fff8e1;
   border-color: #f5e642;
 }
-.important-box.good {
+#guidePage .important-box.good {
   background: var(--green-light);
   border-color: #b8d4bf;
 }
-.important-box .icon { font-size: 1.5rem; margin-bottom: 10px; display: block; }
-.important-box h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
-.important-box p { font-size: 0.82rem; color: #555; line-height: 1.6; }
+#guidePage .important-box .icon { font-size: 1.5rem; margin-bottom: 10px; display: block; }
+#guidePage .important-box h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+#guidePage .important-box p { font-size: 0.82rem; color: #555; line-height: 1.6; }
 
 /* FAQ */
-.faq { display: flex; flex-direction: column; gap: 0; }
-.faq-item {
+#guidePage .faq { display: flex; flex-direction: column; gap: 0; }
+#guidePage .faq-item {
   border-bottom: 1px solid var(--border);
   padding: 20px 0;
 }
-.faq-item:last-child { border-bottom: none; }
-.faq-q {
+#guidePage .faq-item:last-child { border-bottom: none; }
+#guidePage .faq-q {
   font-size: 0.95rem;
   font-weight: 700;
   margin-bottom: 8px;
@@ -431,7 +433,7 @@ body {
   gap: 10px;
   align-items: flex-start;
 }
-.faq-q::before {
+#guidePage .faq-q::before {
   content: 'Q';
   background: var(--black);
   color: var(--white);
@@ -446,7 +448,7 @@ body {
   flex-shrink: 0;
   margin-top: 2px;
 }
-.faq-a {
+#guidePage .faq-a {
   font-size: 0.88rem;
   color: #555;
   padding-left: 30px;
@@ -454,7 +456,7 @@ body {
 }
 
 /* DIVIDER */
-.divider {
+#guidePage .divider {
   height: 1px;
   background: var(--border);
   max-width: 720px;
@@ -462,14 +464,14 @@ body {
 }
 
 /* FOOTER */
-.footer {
+#guidePage .footer {
   text-align: center;
   padding: 48px 24px;
   background: var(--black);
   color: rgba(255,255,255,0.4);
   font-size: 0.78rem;
 }
-.footer strong { color: var(--yellow); }
+#guidePage .footer strong { color: var(--yellow); }
 
 #guidePage { display:none; }
 #guidePage.active { display:block; }
@@ -703,13 +705,9 @@ body {
 </div>
 
 
+
 <!-- GUIDE PAGE -->
 <div id="guidePage">
-  
-
-<div style="padding:16px 24px 0;max-width:720px;margin:0 auto;">
-  <button onclick="history.back()" style="background:none;border:none;font-family:var(--sans);font-size:0.75rem;color:#888;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;">← 돌아가기</button>
-</div>
 <div class="hero">
   <div class="hero-badge">사용 가이드</div>
   <h1>커미션 계산기<br><span>이렇게 쓰세요</span></h1>
