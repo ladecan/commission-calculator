@@ -1666,6 +1666,7 @@ document.getElementById('cancelBtn').addEventListener('click', async () => {
     document.getElementById('saveNote').textContent = '저장이 취소되었습니다.';
     document.getElementById('saveBtn').textContent = '이 결과 저장하기';
     document.getElementById('cancelBtn').style.display = 'none';
+    renderCustomers(currentRow.paydate, currentRow.owner);
     calc();
   } catch(e) { alert('오류: '+e.message); }
 });
