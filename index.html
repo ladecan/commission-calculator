@@ -178,6 +178,301 @@ tbody td.total-cell { font-weight: 500; color: var(--accent); }
 .upload-status .us-val { font-size: 0.85rem; font-weight: 500; color: var(--accent); }
 
 footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top: 40px; }
+
+/* ── Guide styles ── */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #111;
+  --white: #fff;
+  --green: #1a4a2e;
+  --green-light: #e8f0eb;
+  --yellow: #f5e642;
+  --gray: #f4f4f2;
+  --muted: #888;
+  --border: #e0e0e0;
+}
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--white);
+  color: var(--black);
+  line-height: 1.6;
+}
+
+/* HERO */
+.hero {
+  background: var(--black);
+  color: var(--white);
+  padding: 80px 24px 64px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, #1a4a2e44 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 30%, #f5e64222 0%, transparent 50%);
+}
+.hero-badge {
+  display: inline-block;
+  background: var(--yellow);
+  color: var(--black);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 4px 14px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.hero h1 {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  position: relative;
+}
+.hero h1 span { color: var(--yellow); }
+.hero p {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.6);
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* SECTION */
+.section {
+  padding: 64px 24px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 32px;
+}
+.section-label::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--black);
+}
+
+/* STEPS */
+.steps { display: flex; flex-direction: column; gap: 0; }
+.step {
+  display: flex;
+  gap: 24px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.step.visible { opacity: 1; transform: translateY(0); }
+.step:last-child { border-bottom: none; }
+.step-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--black);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+.step-content { flex: 1; }
+.step-content h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+.step-content p {
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.7;
+}
+.step-content .tip {
+  margin-top: 12px;
+  background: var(--yellow);
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--black);
+}
+
+/* MOCK UI */
+.mock {
+  background: #f5f2ec;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 12px 0 0;
+}
+.mock-title {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8a847a;
+  margin-bottom: 12px;
+}
+.mock-owner-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.mock-owner {
+  background: white;
+  border-radius: 8px;
+  padding: 12px 14px;
+  border: 1.5px solid #e0dbd0;
+}
+.mock-owner .n { font-size: 0.82rem; font-weight: 600; margin-bottom: 2px; }
+.mock-owner .c { font-size: 0.65rem; color: #8a847a; }
+.mock-owner.active { border-color: #1a4a2e; background: #e8f0eb; }
+.mock-owner.active .n { color: #1a4a2e; }
+
+.mock-result {
+  background: #111;
+  color: white;
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-top: 12px;
+}
+.mock-result-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 0.78rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.mock-result-row:last-child {
+  border-bottom: none;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  margin-top: 4px;
+}
+.mock-result-row .lbl { opacity: 0.4; }
+.mock-result-row .val { font-weight: 600; }
+.mock-result-row.total .val { color: #7ec89a; font-size: 1rem; }
+
+.mock-save-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 11px;
+  background: #1a4a2e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: default;
+  text-align: center;
+}
+
+/* IMPORTANT BOXES */
+.important-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 8px;
+}
+@media (max-width: 480px) {
+  .important-grid { grid-template-columns: 1fr; }
+  .mock-owner-grid { grid-template-columns: 1fr; }
+}
+.important-box {
+  border-radius: 12px;
+  padding: 20px;
+  border: 2px solid var(--border);
+}
+.important-box.warn {
+  background: #fff8e1;
+  border-color: #f5e642;
+}
+.important-box.good {
+  background: var(--green-light);
+  border-color: #b8d4bf;
+}
+.important-box .icon { font-size: 1.5rem; margin-bottom: 10px; display: block; }
+.important-box h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+.important-box p { font-size: 0.82rem; color: #555; line-height: 1.6; }
+
+/* FAQ */
+.faq { display: flex; flex-direction: column; gap: 0; }
+.faq-item {
+  border-bottom: 1px solid var(--border);
+  padding: 20px 0;
+}
+.faq-item:last-child { border-bottom: none; }
+.faq-q {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.faq-q::before {
+  content: 'Q';
+  background: var(--black);
+  color: var(--white);
+  font-size: 0.65rem;
+  font-weight: 900;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.faq-a {
+  font-size: 0.88rem;
+  color: #555;
+  padding-left: 30px;
+  line-height: 1.7;
+}
+
+/* DIVIDER */
+.divider {
+  height: 1px;
+  background: var(--border);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 48px 24px;
+  background: var(--black);
+  color: rgba(255,255,255,0.4);
+  font-size: 0.78rem;
+}
+.footer strong { color: var(--yellow); }
+
+#guidePage { display:none; }
+#guidePage.active { display:block; }
 </style>
 </head>
 <body>
@@ -204,6 +499,7 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
     </div>
     <div style="display:flex;gap:8px;align-items:center;">
       <button onclick="location.hash=''" class="btn-sm">일반 페이지</button>
+      <button class="btn-sm" id="goGuideBtnAdmin">사용 가이드</button>
       <span class="mode-badge">ADMIN</span>
     </div>
   </div>
@@ -280,6 +576,7 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
     </div>
     <div style="display:flex;gap:10px;align-items:center;">
       <span class="mode-badge user-badge">STAFF</span>
+      <button class="admin-link" id="goGuideBtn">사용 가이드</button>
       <button class="admin-link" id="goAdminBtn">Admin</button>
     </div>
   </div>
@@ -405,6 +702,294 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
   <footer>Candela Korea Internal Use Only</footer>
 </div>
 
+
+<!-- GUIDE PAGE -->
+<div id="guidePage">
+  
+
+<div style="padding:16px 24px 0;max-width:720px;margin:0 auto;">
+  <button onclick="history.back()" style="background:none;border:none;font-family:var(--sans);font-size:0.75rem;color:#888;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;">← 돌아가기</button>
+</div>
+<div class="hero">
+  <div class="hero-badge">사용 가이드</div>
+  <h1>커미션 계산기<br><span>이렇게 쓰세요</span></h1>
+  <p>어렵지 않아요. 딱 3번만 클릭하면 됩니다.</p>
+</div>
+
+<!-- STEP BY STEP -->
+<div class="section">
+  <div class="section-label">사용 순서</div>
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>내 이름을 찾아 클릭</h3>
+        <p>사이트에 접속하면 이번 달 담당자 목록이 보입니다. 본인 이름을 찾아서 클릭하세요.</p>
+        <div class="mock">
+          <div class="mock-title">실제 화면</div>
+          <div style="background:#f8f8f6;border-radius:10px;padding:16px;">
+            <div style="font-family:'Instrument Serif',serif;font-size:1.3rem;font-weight:400;margin-bottom:2px;">Commission<br>Calculator</div>
+            <div style="font-size:0.6rem;color:#9a9690;letter-spacing:0.1em;margin-bottom:14px;">CANDELA KOREA · INDIRECT · VAT INCLUDED</div>
+            <div style="display:flex;gap:6px;margin-bottom:14px;align-items:center;">
+              <span style="font-size:0.68rem;color:#9a9690;">지급월</span>
+              <span style="padding:4px 10px;border-radius:4px;background:#111;color:white;font-size:0.7rem;">2026.04</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div style="padding:14px 16px;border:1px solid #2d5a3d;border-radius:8px;background:white;">
+                <div style="font-size:0.85rem;font-weight:600;margin-bottom:2px;color:#2d5a3d;">Garam Lee</div>
+                <div style="font-size:0.68rem;color:#9a9690;">1건 · ✓ 1건 저장</div>
+              </div>
+              <div style="padding:14px 16px;border:1px solid #2d5a3d;border-radius:8px;background:white;">
+                <div style="font-size:0.85rem;font-weight:600;margin-bottom:2px;color:#2d5a3d;">Sang Geol Oh</div>
+                <div style="font-size:0.68rem;color:#9a9690;">3건 · ✓ 3건 저장</div>
+              </div>
+              <div style="padding:14px 16px;border:1px solid #2d5a3d;border-radius:8px;background:white;">
+                <div style="font-size:0.85rem;font-weight:600;margin-bottom:2px;color:#2d5a3d;">Seung Chul Baek</div>
+                <div style="font-size:0.68rem;color:#9a9690;">1건 · ✓ 1건 저장</div>
+              </div>
+              <div style="padding:14px 16px;border:1px solid #e8e6e0;border-radius:8px;background:white;">
+                <div style="font-size:0.85rem;font-weight:600;margin-bottom:2px;">Yong Chul Lim ← 나!</div>
+                <div style="font-size:0.68rem;color:#9a9690;">1건</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>거래처를 선택</h3>
+        <p>내 거래처 목록이 나옵니다. 계산할 거래처를 클릭하세요. ✓ 저장됨 표시가 있으면 이미 완료한 거예요.</p>
+        <div class="mock" style="margin-top:14px;">
+          <div class="mock-title">실제 화면</div>
+          <div style="background:#f8f8f6;border-radius:10px;padding:16px;">
+            <div style="font-size:0.7rem;color:#9a9690;margin-bottom:10px;">SANG GEOL OH · 거래처 선택</div>
+            <div style="display:flex;flex-direction:column;gap:1px;border:1px solid #e8e6e0;border-radius:8px;overflow:hidden;background:#e8e6e0;">
+              <div style="background:white;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-left:3px solid #2d5a3d;">
+                <div>
+                  <div style="font-size:0.82rem;font-weight:600;margin-bottom:2px;">Snow Clinic_Cheonan <span style="font-size:0.6rem;color:#2d5a3d;">✓ 저장됨</span></div>
+                  <div style="font-size:0.68rem;color:#9a9690;">🏢 TMI · ⚡ GentleMax Pro Plus</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:0.6rem;color:#9a9690;">총 계약금액</div>
+                  <div style="font-size:0.82rem;font-weight:600;">169,090,909</div>
+                </div>
+              </div>
+              <div style="background:white;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-left:3px solid #2d5a3d;">
+                <div>
+                  <div style="font-size:0.82rem;font-weight:600;margin-bottom:2px;">Ruby(Agafar)_Clinic_Seongnam <span style="font-size:0.6rem;color:#2d5a3d;">✓ 저장됨</span></div>
+                  <div style="font-size:0.68rem;color:#9a9690;">🏢 Elluks Korea · ⚡ GentleMax Pro Plus</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:0.6rem;color:#9a9690;">총 계약금액</div>
+                  <div style="font-size:0.82rem;font-weight:600;">159,090,909</div>
+                </div>
+              </div>
+              <div style="background:white;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  <div style="font-size:0.82rem;font-weight:600;margin-bottom:2px;">You&I Clinic Changwon ← 이거 클릭!</div>
+                  <div style="font-size:0.68rem;color:#9a9690;">🏢 Bori Medical · ⚡ GentleMax Pro Plus</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:0.6rem;color:#9a9690;">총 계약금액</div>
+                  <div style="font-size:0.82rem;font-weight:600;">154,545,455</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tip">✓ 저장됨 표시 = 이미 완료!</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>DCD · 워런티 선택하고 저장</h3>
+        <p>계약금액은 자동으로 들어와 있어요. DCD 박스 수와 워런티 연수를 <strong>+/− 버튼</strong>으로 선택하면 커미션이 자동 계산됩니다. 확인 후 <strong>"이 결과 저장하기"</strong> 버튼을 누르세요.</p>
+        <div style="background:#f4f4f2;border-radius:10px;padding:16px 18px;margin:14px 0;font-size:0.85rem;line-height:2;">
+          <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#888;margin-bottom:10px;">소모품(DCD) 선택 기준</div>
+          <div>• 기본 <strong>1박스는 차감 없음</strong> — 추가 박스부터 차감</div>
+          <div>• 일반 딜러: 추가 1박스당 <strong>75만원</strong> 차감</div>
+          <div>• 휴먼홀딩스: 기본 <strong>2박스까지 차감 없음</strong>, 추가부터 누적 차감</div>
+        </div>
+        <div style="background:#f4f4f2;border-radius:10px;padding:16px 18px;margin:0 0 14px;font-size:0.85rem;line-height:2;">
+          <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#888;margin-bottom:10px;">워런티 선택 기준</div>
+          <div>• <strong>GMPP 0~1년</strong>: 차감 없음</div>
+          <div>• <strong>GMPP 2년</strong> (Add 1년): 900만원 차감</div>
+          <div>• <strong>GMPP 3년</strong> (Add 2년): 1,400만원 차감</div>
+          <div>• <strong>VBP 3년</strong>: 26년~ 납품 2,100만 / 25년 이전 2,000만 차감</div>
+          <div>• <strong>VBP 4년</strong>: 26년~ 납품 2,700만 / 25년 이전 2,600만 차감</div>
+          <div style="margin-top:4px;font-size:0.78rem;color:#888;">💡 VBP 3년 이상 선택 시 납품 연도 토글이 자동으로 나타나요</div>
+        </div>
+        <div class="mock">
+          <div class="mock-title">실제 화면</div>
+          <div style="background:#f8f8f6;border-radius:10px;padding:16px;">
+            <!-- prefilled -->
+            <div style="background:#edf3ef;border-radius:6px;padding:12px 16px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;border-left:3px solid #2d5a3d;">
+              <div><div style="font-size:0.6rem;color:#2d5a3d;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:3px;font-weight:500;">거래처</div><div style="font-size:0.82rem;font-weight:600;">Snow Clinic_Cheonan</div><div style="font-size:0.68rem;color:#9a9690;">TMI</div></div>
+              <div><div style="font-size:0.6rem;color:#2d5a3d;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:3px;font-weight:500;">제품 · 계약금액</div><div style="font-size:0.82rem;font-weight:600;">169,090,909</div><div style="font-size:0.68rem;color:#9a9690;">GentleMax Pro Plus</div></div>
+              <div><div style="font-size:0.6rem;color:#2d5a3d;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:3px;font-weight:500;">납품월</div><div style="font-size:0.82rem;font-weight:600;">2026.03</div></div>
+            </div>
+            <!-- DCD -->
+            <div style="margin-bottom:14px;">
+              <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.05em;color:#9a9690;margin-bottom:8px;font-weight:500;">DCD 박스 수</div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="display:flex;border:1px solid #e8e6e0;border-radius:6px;overflow:hidden;">
+                  <div style="padding:9px 16px;background:#f8f8f6;font-size:1rem;">−</div>
+                  <div style="padding:9px 22px;font-size:0.95rem;font-weight:600;border-left:1px solid #e8e6e0;border-right:1px solid #e8e6e0;">0</div>
+                  <div style="padding:9px 16px;background:#f8f8f6;font-size:1rem;">+</div>
+                </div>
+                <span style="font-size:0.68rem;color:#9a9690;">기본 1박스 차감없음 · 추가 1박스당 75만원</span>
+              </div>
+              <div style="font-size:0.68rem;color:#9a9690;margin-top:5px;">차감 없음</div>
+            </div>
+            <!-- Warranty -->
+            <div style="margin-bottom:14px;">
+              <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.05em;color:#9a9690;margin-bottom:8px;font-weight:500;">워런티 (EXTENDED WARRANTY)</div>
+              <div style="display:flex;border:1px solid #e8e6e0;border-radius:6px;overflow:hidden;width:fit-content;">
+                <div style="padding:9px 16px;background:#f8f8f6;font-size:1rem;">−</div>
+                <div style="padding:9px 22px;font-size:0.95rem;font-weight:600;border-left:1px solid #e8e6e0;border-right:1px solid #e8e6e0;">0년</div>
+                <div style="padding:9px 16px;background:#f8f8f6;font-size:1rem;">+</div>
+              </div>
+              <div style="font-size:0.68rem;color:#9a9690;margin-top:5px;">기본 포함 · 차감없음</div>
+            </div>
+            <!-- Rate -->
+            <div style="margin-bottom:14px;">
+              <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.05em;color:#9a9690;margin-bottom:8px;font-weight:500;">수수료율</div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <div style="padding:9px 20px;border:1px solid #e8e6e0;border-radius:6px;font-size:0.95rem;font-weight:500;">7%</div>
+                <div style="padding:9px 20px;border:1px solid #111;border-radius:6px;background:#111;color:white;font-size:0.95rem;font-weight:500;">10%</div>
+                <span style="font-size:0.68rem;color:#9a9690;">10%: TMI · Innomed · SevenU / 7%: 그 외</span>
+              </div>
+            </div>
+            <!-- Result -->
+            <div style="background:#111;color:white;border-radius:8px;padding:18px;">
+              <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.75rem;border-bottom:1px solid rgba(255,255,255,0.07);"><span style="opacity:0.4;">총 계약금액</span><span>169,090,909원</span></div>
+              <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.75rem;border-bottom:1px solid rgba(255,255,255,0.07);"><span style="opacity:0.4;">DCD 차감</span><span>없음</span></div>
+              <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.75rem;border-bottom:1px solid rgba(255,255,255,0.07);"><span style="opacity:0.4;">워런티 차감</span><span>없음</span></div>
+              <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.75rem;border-bottom:1px solid rgba(255,255,255,0.07);"><span style="opacity:0.4;">수수료 계산용 실적</span><span>169,090,909원</span></div>
+              <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.75rem;border-bottom:1px solid rgba(255,255,255,0.07);"><span style="opacity:0.4;">커미션</span><span>16,909,091원</span></div>
+              <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.75rem;border-bottom:1px solid rgba(255,255,255,0.07);"><span style="opacity:0.4;">세액 (10%)</span><span>1,690,909원</span></div>
+              <div style="display:flex;justify-content:space-between;padding:10px 0 5px;font-size:0.75rem;border-top:1px solid rgba(255,255,255,0.15);margin-top:4px;"><span style="opacity:0.5;">최종 커미션 합계 (VAT 포함)</span><span style="color:#7ec89a;font-size:1.05rem;font-weight:600;">18,600,000원</span></div>
+            </div>
+            <div style="width:100%;margin-top:10px;padding:11px;background:#2d5a3d;color:white;border-radius:6px;text-align:center;font-size:0.82rem;font-weight:600;">결과 다시 저장하기</div>
+          </div>
+        </div>
+        <div class="tip">저장 버튼 눌러야 완료!</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h3>금액 불일치 경고가 뜰 수 있어요</h3>
+        <p>관리자가 미리 예상 커미션을 입력해둔 경우, 내가 계산한 금액과 다르면 아래와 같은 경고창이 나타납니다.</p>
+        <div style="background:#fff8e1;border:1.5px solid #f5e642;border-radius:10px;padding:18px 20px;margin:14px 0;font-size:0.85rem;line-height:1.8;">
+          <div style="font-weight:700;margin-bottom:8px;">⚠️ 관리자 예상 금액과 다릅니다.</div>
+          <div style="color:#555;">관리자 예상: 14,000,000원</div>
+          <div style="color:#555;">내 계산: 12,325,000원</div>
+          <div style="color:#c84b2f;font-weight:600;">차이: -1,675,000원 (11%)</div>
+          <div style="margin-top:12px;display:flex;gap:8px;">
+            <div style="padding:8px 20px;background:#111;color:white;border-radius:6px;font-size:0.8rem;font-weight:600;">그래도 저장</div>
+            <div style="padding:8px 20px;border:1px solid #e0e0e0;border-radius:6px;font-size:0.8rem;">돌아가서 확인</div>
+          </div>
+        </div>
+        <p style="font-size:0.88rem;color:#555;">저장 버튼을 누르면 관리자가 미리 입력한 예상 금액과 자동으로 비교됩니다.</p>
+        <div style="background:#d4edda;border:1.5px solid #b8d4bf;border-radius:10px;padding:16px 20px;margin:12px 0;font-size:0.85rem;">
+          <div style="font-weight:700;margin-bottom:6px;">✅ 금액이 일치할 때</div>
+          <div style="color:#555;">"관리자 예상 금액과 일치합니다!" 팝업이 뜨고 바로 저장돼요.</div>
+        </div>
+        <div style="background:#fff8e1;border:1.5px solid #f5e642;border-radius:10px;padding:16px 20px;margin:12px 0;font-size:0.85rem;">
+          <div style="font-weight:700;margin-bottom:6px;">⚠️ 금액이 다를 때</div>
+          <div style="color:#555;">차이 금액과 함께 경고창이 뜨고, 다시 확인하거나 그래도 저장할 수 있어요. DCD 박스 수나 워런티 연수가 맞는지 먼저 확인해보세요.</div>
+        </div>
+        <div class="tip">관리자 예상값이 없으면 팝업 없이 바로 저장돼요</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- IMPORTANT -->
+<div class="section">
+  <div class="section-label">꼭 알아두세요</div>
+  <div class="important-grid">
+    <div class="important-box warn">
+      <span class="icon">⚠️</span>
+      <h4>DCD 박스 수 · 워런티 연수 직접 확인</h4>
+      <p>기본 1박스는 차감 없고 추가 박스부터 차감돼요. 실제 납품된 박스 수를 정확히 선택하세요.<br><br>워런티는 자동으로 세팅되지 않아요. 실제 계약한 <strong>총 워런티 연수</strong>를 직접 선택해야 해요!</p>
+    </div>
+    <div class="important-box warn">
+      <span class="icon">💹</span>
+      <h4>수수료율 한 번 더 확인</h4>
+      <p>딜러사에 따라 자동 세팅되지만 맞는지 꼭 확인해주세요.<br>TMI · Innomed · SevenU → 10% / 그 외 → 7%</p>
+    </div>
+    <div class="important-box good">
+      <span class="icon">🏢</span>
+      <h4>휴먼홀딩스 기준 자동 적용</h4>
+      <p>Human Holdings 딜러사일 경우 DCD 2박스까지 차감 없음 등 별도 기준이 자동 적용돼요. DCD 입력칸 옆에 <strong style="background:#fff3cd;color:#856404;padding:1px 6px;border-radius:3px;">🏢 휴먼홀딩스 기준 적용</strong> 표시가 뜨면 확인하세요.</p>
+    </div>
+    <div class="important-box good">
+      <span class="icon">💾</span>
+      <h4>저장 버튼 꼭 누르기</h4>
+      <p>계산만 하고 저장 안 하면 관리자에게 안 보여요. 반드시 "저장하기" 버튼까지 눌러주세요!</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- FAQ -->
+<div class="section">
+  <div class="section-label">자주 묻는 질문</div>
+  <div class="faq">
+    <div class="faq-item">
+      <div class="faq-q">내 이름이 없어요</div>
+      <div class="faq-a">이번 달 데이터가 아직 업로드되지 않았거나 이름이 다르게 등록됐을 수 있어요. 관리자에게 문의해주세요.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">계약금액이 실제와 달라요</div>
+      <div class="faq-a">계약금액은 엑셀 데이터 기준으로 자동 입력되며 수정이 불가해요. 금액이 다르다면 관리자에게 문의해주세요.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">저장했는데 다시 들어가면 없어요</div>
+      <div class="faq-a">정상이에요! 내 이름 → 거래처 순서로 다시 들어가면 ✓ 저장됨 표시와 함께 이전에 입력한 값이 그대로 나와요.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">잘못 저장했어요</div>
+      <div class="faq-a">다시 같은 거래처로 들어가서 수정하고 "결과 다시 저장하기" 버튼을 누르면 덮어씌워져요.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">모바일에서도 되나요?</div>
+      <div class="faq-a">네! 모바일에서도 동일하게 사용할 수 있어요.</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  문의사항은 관리자에게 연락해주세요.<br>
+  <strong>커미션 계산기</strong> · 사내 전용
+</div>
+
+<script>
+// Scroll animation
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 100);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.step').forEach(el => observer.observe(el));
+</script>
+</div>
 </div><!-- .wrap -->
 
 <script>
@@ -465,9 +1050,18 @@ async function route() {
     const authed = sessionStorage.getItem('cc_admin') === '1';
     if (authed) { showAdmin(); }
     else { showAdminPw(); }
+  } else if (hash === '#guide') {
+    showGuide();
   } else {
     showUser();
   }
+}
+
+function showGuide() {
+  document.getElementById('adminPwPage').style.display = 'none';
+  document.getElementById('adminPage').style.display = 'none';
+  document.getElementById('userPage').style.display = 'none';
+  document.getElementById('guidePage').classList.add('active');
 }
 
 window.addEventListener('hashchange', route);
@@ -773,6 +1367,7 @@ async function showUser() {
   document.getElementById('adminPwPage').style.display = 'none';
   document.getElementById('adminPage').style.display = 'none';
   document.getElementById('userPage').style.display = '';
+  document.getElementById('guidePage').classList.remove('active');
   await loadExcelData();
   await loadResults();
   const activeMonth = await getActiveMonth();
@@ -1235,6 +1830,8 @@ function showErr(id, msg) { const el=document.getElementById(id); el.textContent
 function hideErr(id) { const el=document.getElementById(id); el.classList.remove('show'); el.style.display='none'; }
 
 // ── Boot ──────────────────────────────────────────────────────
+document.getElementById('goGuideBtn').addEventListener('click', () => { location.hash = '#guide'; });
+document.getElementById('goGuideBtnAdmin').addEventListener('click', () => { location.hash = '#guide'; });
 route();
 </script>
 </body>
