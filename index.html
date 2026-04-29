@@ -181,9 +181,11 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
 
 
 
+
+
 /* ── Guide styles ── */
 
-#guidePage * { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 #guidePage :root {
   --black: #111;
   --white: #fff;
@@ -398,8 +400,8 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
   margin-top: 8px;
 }
 @media (max-width: 480px) {
-  #guidePage .important-grid { grid-template-columns: 1fr; }
-  #guidePage .mock-owner-grid { grid-template-columns: 1fr; }
+  .important-grid { grid-template-columns: 1fr; }
+  .mock-owner-grid { grid-template-columns: 1fr; }
 }
 #guidePage .important-box {
   border-radius: 12px;
@@ -707,6 +709,7 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
 
 
 
+
 <!-- GUIDE PAGE -->
 <div id="guidePage">
 <div class="hero">
@@ -963,6 +966,10 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
     <div class="faq-item">
       <div class="faq-q">잘못 저장했어요</div>
       <div class="faq-a">다시 같은 거래처로 들어가서 수정하고 "결과 다시 저장하기" 버튼을 누르면 덮어씌워져요.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">저장을 아예 취소하고 싶어요</div>
+      <div class="faq-a">저장된 거래처로 들어가면 "저장 취소" 버튼이 나타나요. 누르면 저장된 결과가 삭제되고 미완료 상태로 돌아가요.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">모바일에서도 되나요?</div>
