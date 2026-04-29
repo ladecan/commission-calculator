@@ -150,7 +150,6 @@ thead th { font-size: 0.62rem; letter-spacing: 0.07em; text-transform: uppercase
 tbody td { padding: 10px 12px; vertical-align: middle; white-space: nowrap; }
 tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
 tbody tr:hover { background: var(--accent-light); }
-tbody td { padding: 10px 12px; vertical-align: middle; white-space: nowrap; }
 tbody td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 tbody td.total-cell { font-weight: 500; color: var(--accent); }
 .status-badge { display: inline-block; padding: 2px 8px; border-radius: 100px; font-size: 0.62rem; }
@@ -179,304 +178,50 @@ tbody td.total-cell { font-weight: 500; color: var(--accent); }
 
 footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top: 40px; }
 
-
-
-
-
 /* ── Guide styles ── */
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
 #guidePage :root {
-  --black: #111;
-  --white: #fff;
-  --green: #1a4a2e;
-  --green-light: #e8f0eb;
-  --yellow: #f5e642;
-  --gray: #f4f4f2;
-  --muted: #888;
-  --border: #e0e0e0;
+  --black: #111; --white: #fff; --green: #1a4a2e; --green-light: #e8f0eb;
+  --yellow: #f5e642; --gray: #f4f4f2; --muted: #888; --border: #e0e0e0;
 }
-#guidePage body {
-  font-family: 'Noto Sans KR', sans-serif;
-  background: var(--white);
-  color: var(--black);
-  line-height: 1.6;
-}
-
-/* HERO */
-#guidePage .hero {
-  background: var(--black);
-  color: var(--white);
-  padding: 80px 24px 64px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-#guidePage .hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 30% 50%, #1a4a2e44 0%, transparent 60%),
-              radial-gradient(ellipse at 70% 30%, #f5e64222 0%, transparent 50%);
-}
-#guidePage .hero-badge {
-  display: inline-block;
-  background: var(--yellow);
-  color: var(--black);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  padding: 4px 14px;
-  border-radius: 100px;
-  margin-bottom: 20px;
-  position: relative;
-}
-#guidePage .hero h1 {
-  font-size: clamp(2rem, 6vw, 3.5rem);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 1.1;
-  margin-bottom: 16px;
-  position: relative;
-}
-#guidePage .hero h1 span { color: var(--yellow); }
-#guidePage .hero p {
-  font-size: 1rem;
-  color: rgba(255,255,255,0.6);
-  max-width: 480px;
-  margin: 0 auto;
-  position: relative;
-}
-
-/* SECTION */
-#guidePage .section {
-  padding: 64px 24px;
-  max-width: 720px;
-  margin: 0 auto;
-}
-#guidePage .section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 32px;
-}
-#guidePage .section-label::before {
-  content: '';
-  display: block;
-  width: 24px;
-  height: 2px;
-  background: var(--black);
-}
-
-/* STEPS */
+#guidePage { display:none; }
+#guidePage.active { display:block; }
+#guidePage .hero { background: var(--black); color: var(--white); padding: 80px 24px 64px; text-align: center; position: relative; overflow: hidden; }
+#guidePage .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 50%, #1a4a2e44 0%, transparent 60%), radial-gradient(ellipse at 70% 30%, #f5e64222 0%, transparent 50%); }
+#guidePage .hero-badge { display: inline-block; background: #f5e642; color: #111; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; padding: 4px 14px; border-radius: 100px; margin-bottom: 20px; position: relative; }
+#guidePage .hero h1 { font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 900; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 16px; position: relative; }
+#guidePage .hero h1 span { color: #f5e642; }
+#guidePage .hero p { font-size: 1rem; color: rgba(255,255,255,0.6); max-width: 480px; margin: 0 auto; position: relative; }
+#guidePage .section { padding: 64px 24px; max-width: 720px; margin: 0 auto; }
+#guidePage .section-label { display: inline-flex; align-items: center; gap: 8px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #888; margin-bottom: 32px; }
+#guidePage .section-label::before { content: ''; display: block; width: 24px; height: 2px; background: #111; }
 #guidePage .steps { display: flex; flex-direction: column; gap: 0; }
-#guidePage .step {
-  display: flex;
-  gap: 24px;
-  padding: 28px 0;
-  border-bottom: 1px solid var(--border);
-  align-items: flex-start;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
+#guidePage .step { display: flex; gap: 24px; padding: 28px 0; border-bottom: 1px solid #e0e0e0; align-items: flex-start; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
 #guidePage .step.visible { opacity: 1; transform: translateY(0); }
 #guidePage .step:last-child { border-bottom: none; }
-#guidePage .step-num {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--black);
-  color: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  font-weight: 900;
-  flex-shrink: 0;
-}
+#guidePage .step-num { width: 44px; height: 44px; border-radius: 50%; background: #111; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 900; flex-shrink: 0; }
 #guidePage .step-content { flex: 1; }
-#guidePage .step-content h3 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-  letter-spacing: -0.02em;
-}
-#guidePage .step-content p {
-  font-size: 0.9rem;
-  color: #555;
-  line-height: 1.7;
-}
-#guidePage .step-content .tip {
-  margin-top: 12px;
-  background: var(--yellow);
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 4px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--black);
-}
-
-/* MOCK UI */
-#guidePage .mock {
-  background: #f5f2ec;
-  border-radius: 16px;
-  padding: 24px;
-  margin: 12px 0 0;
-}
-#guidePage .mock-title {
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #8a847a;
-  margin-bottom: 12px;
-}
-#guidePage .mock-owner-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-#guidePage .mock-owner {
-  background: white;
-  border-radius: 8px;
-  padding: 12px 14px;
-  border: 1.5px solid #e0dbd0;
-}
-#guidePage .mock-owner .n { font-size: 0.82rem; font-weight: 600; margin-bottom: 2px; }
-#guidePage .mock-owner .c { font-size: 0.65rem; color: #8a847a; }
-#guidePage .mock-owner.active { border-color: #1a4a2e; background: #e8f0eb; }
-#guidePage .mock-owner.active .n { color: #1a4a2e; }
-
-#guidePage .mock-result {
-  background: #111;
-  color: white;
-  border-radius: 10px;
-  padding: 16px 18px;
-  margin-top: 12px;
-}
-#guidePage .mock-result-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 5px 0;
-  font-size: 0.78rem;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-}
-#guidePage .mock-result-row:last-child {
-  border-bottom: none;
-  padding-top: 10px;
-  border-top: 1px solid rgba(255,255,255,0.15);
-  margin-top: 4px;
-}
-#guidePage .mock-result-row .lbl { opacity: 0.4; }
-#guidePage .mock-result-row .val { font-weight: 600; }
-#guidePage .mock-result-row.total .val { color: #7ec89a; font-size: 1rem; }
-
-#guidePage .mock-save-btn {
-  width: 100%;
-  margin-top: 10px;
-  padding: 11px;
-  background: #1a4a2e;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 0.85rem;
-  font-weight: 700;
-  cursor: default;
-  text-align: center;
-}
-
-/* IMPORTANT BOXES */
-#guidePage .important-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-top: 8px;
-}
-@media (max-width: 480px) {
-  .important-grid { grid-template-columns: 1fr; }
-  .mock-owner-grid { grid-template-columns: 1fr; }
-}
-#guidePage .important-box {
-  border-radius: 12px;
-  padding: 20px;
-  border: 2px solid var(--border);
-}
-#guidePage .important-box.warn {
-  background: #fff8e1;
-  border-color: #f5e642;
-}
-#guidePage .important-box.good {
-  background: var(--green-light);
-  border-color: #b8d4bf;
-}
+#guidePage .step-content h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.02em; }
+#guidePage .step-content p { font-size: 0.9rem; color: #555; line-height: 1.7; }
+#guidePage .step-content .tip { margin-top: 12px; background: #f5e642; display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 0.78rem; font-weight: 700; color: #111; }
+#guidePage .mock { background: #f5f2ec; border-radius: 16px; padding: 24px; margin: 12px 0 0; }
+#guidePage .mock-title { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: #8a847a; margin-bottom: 12px; }
+#guidePage .important-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+@media (max-width: 480px) { #guidePage .important-grid { grid-template-columns: 1fr; } }
+#guidePage .important-box { border-radius: 12px; padding: 20px; border: 2px solid #e0e0e0; }
+#guidePage .important-box.warn { background: #fff8e1; border-color: #f5e642; }
+#guidePage .important-box.good { background: #e8f0eb; border-color: #b8d4bf; }
 #guidePage .important-box .icon { font-size: 1.5rem; margin-bottom: 10px; display: block; }
 #guidePage .important-box h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
 #guidePage .important-box p { font-size: 0.82rem; color: #555; line-height: 1.6; }
-
-/* FAQ */
 #guidePage .faq { display: flex; flex-direction: column; gap: 0; }
-#guidePage .faq-item {
-  border-bottom: 1px solid var(--border);
-  padding: 20px 0;
-}
+#guidePage .faq-item { border-bottom: 1px solid #e0e0e0; padding: 20px 0; }
 #guidePage .faq-item:last-child { border-bottom: none; }
-#guidePage .faq-q {
-  font-size: 0.95rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-#guidePage .faq-q::before {
-  content: 'Q';
-  background: var(--black);
-  color: var(--white);
-  font-size: 0.65rem;
-  font-weight: 900;
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-#guidePage .faq-a {
-  font-size: 0.88rem;
-  color: #555;
-  padding-left: 30px;
-  line-height: 1.7;
-}
-
-/* DIVIDER */
-#guidePage .divider {
-  height: 1px;
-  background: var(--border);
-  max-width: 720px;
-  margin: 0 auto;
-}
-
-/* FOOTER */
-#guidePage .footer {
-  text-align: center;
-  padding: 48px 24px;
-  background: var(--black);
-  color: rgba(255,255,255,0.4);
-  font-size: 0.78rem;
-}
-#guidePage .footer strong { color: var(--yellow); }
-
-#guidePage { display:none; }
-#guidePage.active { display:block; }
+#guidePage .faq-q { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; display: flex; gap: 10px; align-items: flex-start; }
+#guidePage .faq-q::before { content: 'Q'; background: #111; color: #fff; font-size: 0.65rem; font-weight: 900; width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+#guidePage .faq-a { font-size: 0.88rem; color: #555; padding-left: 30px; line-height: 1.7; }
+#guidePage .divider { height: 1px; background: #e0e0e0; max-width: 720px; margin: 0 auto; }
+#guidePage .footer { text-align: center; padding: 48px 24px; background: #111; color: rgba(255,255,255,0.4); font-size: 0.78rem; }
+#guidePage .footer strong { color: #f5e642; }
 </style>
 </head>
 <body>
@@ -509,7 +254,6 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
   </div>
   <div class="error-msg" id="adminErr"></div>
 
-  <!-- Admin upload -->
   <div class="admin-header">
     <p class="section-title" style="margin:0;">데이터 관리</p>
     <div class="admin-actions">
@@ -525,7 +269,6 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
     <div class="us-val" id="uploadedInfo">—</div>
   </div>
 
-  <!-- Month filter -->
   <div class="month-row" id="adminMonthRow" style="margin-bottom:16px;">
     <span class="month-lbl">지급월</span>
     <div id="adminMonthPills" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
@@ -533,30 +276,17 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
   </div>
   <div id="activeMonthInfo" style="font-size:0.72rem;color:var(--muted);margin-bottom:16px;"></div>
 
-  <!-- Owner filter -->
   <div class="owner-filter-row" id="ownerFilterRow"></div>
-
-  <!-- Summary -->
   <div class="summary-grid" id="summaryGrid"></div>
 
-  <!-- Table -->
   <div class="tbl-wrap">
     <table id="adminTable">
       <thead>
         <tr>
-          <th>담당자</th>
-          <th>거래처</th>
-          <th>딜러</th>
-          <th>제품</th>
-          <th class="num">계약금액</th>
-          <th class="num">DCD</th>
-          <th class="num">워런티</th>
-          <th class="num">실적</th>
-          <th>율</th>
-          <th class="num">커미션 합계</th>
-          <th class="num">예상 커미션</th>
-          <th class="num">차이</th>
-          <th>상태</th>
+          <th>담당자</th><th>거래처</th><th>딜러</th><th>제품</th>
+          <th class="num">계약금액</th><th class="num">DCD</th><th class="num">워런티</th>
+          <th class="num">실적</th><th>율</th><th class="num">커미션 합계</th>
+          <th class="num">예상 커미션</th><th class="num">차이</th><th>상태</th>
         </tr>
       </thead>
       <tbody id="adminTbody"></tbody>
@@ -567,7 +297,6 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
     <h3>아직 저장된 결과가 없습니다</h3>
     <p>담당자들이 커미션을 계산하고 저장하면 여기에 표시됩니다.</p>
   </div>
-
   <footer>Candela Korea Internal Use Only</footer>
 </div>
 
@@ -595,7 +324,7 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
 
   <div class="error-msg" id="userErr"></div>
 
-  <!-- P1: 담당자 선택 -->
+  <!-- P1 -->
   <div class="panel active" id="p1">
     <div class="month-row">
       <span class="month-lbl">지급월</span>
@@ -609,14 +338,14 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
     </div>
   </div>
 
-  <!-- P2: 거래처 선택 -->
+  <!-- P2 -->
   <div class="panel" id="p2">
     <button class="back-btn" id="backTo1">← 담당자 다시 선택</button>
     <p class="section-title" id="p2Title">거래처 선택</p>
     <div class="list" id="customerList"></div>
   </div>
 
-  <!-- P3: 계산기 -->
+  <!-- P3 -->
   <div class="panel" id="p3">
     <button class="back-btn" id="backTo2">← 거래처 다시 선택</button>
     <div class="card">
@@ -635,7 +364,6 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
           <div class="lbl">납품월</div>
           <div class="val" id="selYyyymm">—</div>
         </div>
-
       </div>
       <div class="row">
         <span class="field-label">총 계약금액</span>
@@ -707,9 +435,6 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
   <footer>Candela Korea Internal Use Only</footer>
 </div>
 
-
-
-
 <!-- GUIDE PAGE -->
 <div id="guidePage">
 <div class="hero">
@@ -717,12 +442,9 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
   <h1>커미션 계산기<br><span>이렇게 쓰세요</span></h1>
   <p>어렵지 않아요. 딱 3번만 클릭하면 됩니다.</p>
 </div>
-
-<!-- STEP BY STEP -->
 <div class="section">
   <div class="section-label">사용 순서</div>
   <div class="steps">
-
     <div class="step">
       <div class="step-num">1</div>
       <div class="step-content">
@@ -738,268 +460,74 @@ footer { text-align: center; font-size: 0.65rem; color: var(--muted); margin-top
               <span style="padding:4px 10px;border-radius:4px;background:#111;color:white;font-size:0.7rem;">2026.04</span>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-              <div style="padding:14px 16px;border:1px solid #2d5a3d;border-radius:8px;background:white;">
-                <div style="font-size:0.85rem;font-weight:600;margin-bottom:2px;color:#2d5a3d;">Garam Lee</div>
-                <div style="font-size:0.68rem;color:#9a9690;">1건 · ✓ 1건 저장</div>
-              </div>
-              <div style="padding:14px 16px;border:1px solid #2d5a3d;border-radius:8px;background:white;">
-                <div style="font-size:0.85rem;font-weight:600;margin-bottom:2px;color:#2d5a3d;">Sang Geol Oh</div>
-                <div style="font-size:0.68rem;color:#9a9690;">3건 · ✓ 3건 저장</div>
-              </div>
-              <div style="padding:14px 16px;border:1px solid #2d5a3d;border-radius:8px;background:white;">
-                <div style="font-size:0.85rem;font-weight:600;margin-bottom:2px;color:#2d5a3d;">Seung Chul Baek</div>
-                <div style="font-size:0.68rem;color:#9a9690;">1건 · ✓ 1건 저장</div>
-              </div>
-              <div style="padding:14px 16px;border:1px solid #e8e6e0;border-radius:8px;background:white;">
-                <div style="font-size:0.85rem;font-weight:600;margin-bottom:2px;">Yong Chul Lim ← 나!</div>
-                <div style="font-size:0.68rem;color:#9a9690;">1건</div>
-              </div>
+              <div style="padding:14px 16px;border:1px solid #2d5a3d;border-radius:8px;background:white;"><div style="font-size:0.85rem;font-weight:600;margin-bottom:2px;color:#2d5a3d;">Garam Lee</div><div style="font-size:0.68rem;color:#9a9690;">1건 · ✓ 1건 저장</div></div>
+              <div style="padding:14px 16px;border:1px solid #2d5a3d;border-radius:8px;background:white;"><div style="font-size:0.85rem;font-weight:600;margin-bottom:2px;color:#2d5a3d;">Sang Geol Oh</div><div style="font-size:0.68rem;color:#9a9690;">3건 · ✓ 3건 저장</div></div>
+              <div style="padding:14px 16px;border:1px solid #2d5a3d;border-radius:8px;background:white;"><div style="font-size:0.85rem;font-weight:600;margin-bottom:2px;color:#2d5a3d;">Seung Chul Baek</div><div style="font-size:0.68rem;color:#9a9690;">1건 · ✓ 1건 저장</div></div>
+              <div style="padding:14px 16px;border:1px solid #e8e6e0;border-radius:8px;background:white;"><div style="font-size:0.85rem;font-weight:600;margin-bottom:2px;">Yong Chul Lim ← 나!</div><div style="font-size:0.68rem;color:#9a9690;">1건</div></div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
     <div class="step">
       <div class="step-num">2</div>
       <div class="step-content">
         <h3>거래처를 선택</h3>
         <p>내 거래처 목록이 나옵니다. 계산할 거래처를 클릭하세요. ✓ 저장됨 표시가 있으면 이미 완료한 거예요.</p>
-        <div class="mock" style="margin-top:14px;">
-          <div class="mock-title">실제 화면</div>
-          <div style="background:#f8f8f6;border-radius:10px;padding:16px;">
-            <div style="font-size:0.7rem;color:#9a9690;margin-bottom:10px;">SANG GEOL OH · 거래처 선택</div>
-            <div style="display:flex;flex-direction:column;gap:1px;border:1px solid #e8e6e0;border-radius:8px;overflow:hidden;background:#e8e6e0;">
-              <div style="background:white;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-left:3px solid #2d5a3d;">
-                <div>
-                  <div style="font-size:0.82rem;font-weight:600;margin-bottom:2px;">Snow Clinic_Cheonan <span style="font-size:0.6rem;color:#2d5a3d;">✓ 저장됨</span></div>
-                  <div style="font-size:0.68rem;color:#9a9690;">🏢 TMI · ⚡ GentleMax Pro Plus</div>
-                </div>
-                <div style="text-align:right;">
-                  <div style="font-size:0.6rem;color:#9a9690;">총 계약금액</div>
-                  <div style="font-size:0.82rem;font-weight:600;">169,090,909</div>
-                </div>
-              </div>
-              <div style="background:white;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-left:3px solid #2d5a3d;">
-                <div>
-                  <div style="font-size:0.82rem;font-weight:600;margin-bottom:2px;">Ruby(Agafar)_Clinic_Seongnam <span style="font-size:0.6rem;color:#2d5a3d;">✓ 저장됨</span></div>
-                  <div style="font-size:0.68rem;color:#9a9690;">🏢 Elluks Korea · ⚡ GentleMax Pro Plus</div>
-                </div>
-                <div style="text-align:right;">
-                  <div style="font-size:0.6rem;color:#9a9690;">총 계약금액</div>
-                  <div style="font-size:0.82rem;font-weight:600;">159,090,909</div>
-                </div>
-              </div>
-              <div style="background:white;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
-                <div>
-                  <div style="font-size:0.82rem;font-weight:600;margin-bottom:2px;">You&I Clinic Changwon ← 이거 클릭!</div>
-                  <div style="font-size:0.68rem;color:#9a9690;">🏢 Bori Medical · ⚡ GentleMax Pro Plus</div>
-                </div>
-                <div style="text-align:right;">
-                  <div style="font-size:0.6rem;color:#9a9690;">총 계약금액</div>
-                  <div style="font-size:0.82rem;font-weight:600;">154,545,455</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="tip">✓ 저장됨 표시 = 이미 완료!</div>
       </div>
     </div>
-
     <div class="step">
       <div class="step-num">3</div>
       <div class="step-content">
         <h3>DCD · 워런티 선택하고 저장</h3>
         <p>계약금액은 자동으로 들어와 있어요. DCD 박스 수와 워런티 연수를 <strong>+/− 버튼</strong>으로 선택하면 커미션이 자동 계산됩니다. 확인 후 <strong>"이 결과 저장하기"</strong> 버튼을 누르세요.</p>
-        <div style="background:#f4f4f2;border-radius:10px;padding:16px 18px;margin:14px 0;font-size:0.85rem;line-height:2;">
-          <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#888;margin-bottom:10px;">소모품(DCD) 선택 기준</div>
-          <div>• 기본 <strong>1박스는 차감 없음</strong> — 추가 박스부터 차감</div>
-          <div>• 일반 딜러: 추가 1박스당 <strong>75만원</strong> 차감</div>
-          <div>• 휴먼홀딩스: 기본 <strong>2박스까지 차감 없음</strong>, 추가부터 누적 차감</div>
-        </div>
-        <div style="background:#f4f4f2;border-radius:10px;padding:16px 18px;margin:0 0 14px;font-size:0.85rem;line-height:2;">
-          <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#888;margin-bottom:10px;">워런티 선택 기준</div>
-          <div>• <strong>GMPP 0~1년</strong>: 차감 없음</div>
-          <div>• <strong>GMPP 2년</strong> (Add 1년): 900만원 차감</div>
-          <div>• <strong>GMPP 3년</strong> (Add 2년): 1,400만원 차감</div>
-          <div>• <strong>VBP 3년</strong>: 26년~ 납품 2,100만 / 25년 이전 2,000만 차감</div>
-          <div>• <strong>VBP 4년</strong>: 26년~ 납품 2,700만 / 25년 이전 2,600만 차감</div>
-          <div style="margin-top:4px;font-size:0.78rem;color:#888;">💡 VBP 3년 이상 선택 시 납품 연도 토글이 자동으로 나타나요</div>
-        </div>
-        <div class="mock">
-          <div class="mock-title">실제 화면</div>
-          <div style="background:#f8f8f6;border-radius:10px;padding:16px;">
-            <!-- prefilled -->
-            <div style="background:#edf3ef;border-radius:6px;padding:12px 16px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;border-left:3px solid #2d5a3d;">
-              <div><div style="font-size:0.6rem;color:#2d5a3d;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:3px;font-weight:500;">거래처</div><div style="font-size:0.82rem;font-weight:600;">Snow Clinic_Cheonan</div><div style="font-size:0.68rem;color:#9a9690;">TMI</div></div>
-              <div><div style="font-size:0.6rem;color:#2d5a3d;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:3px;font-weight:500;">제품 · 계약금액</div><div style="font-size:0.82rem;font-weight:600;">169,090,909</div><div style="font-size:0.68rem;color:#9a9690;">GentleMax Pro Plus</div></div>
-              <div><div style="font-size:0.6rem;color:#2d5a3d;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:3px;font-weight:500;">납품월</div><div style="font-size:0.82rem;font-weight:600;">2026.03</div></div>
-            </div>
-            <!-- DCD -->
-            <div style="margin-bottom:14px;">
-              <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.05em;color:#9a9690;margin-bottom:8px;font-weight:500;">DCD 박스 수</div>
-              <div style="display:flex;align-items:center;gap:12px;">
-                <div style="display:flex;border:1px solid #e8e6e0;border-radius:6px;overflow:hidden;">
-                  <div style="padding:9px 16px;background:#f8f8f6;font-size:1rem;">−</div>
-                  <div style="padding:9px 22px;font-size:0.95rem;font-weight:600;border-left:1px solid #e8e6e0;border-right:1px solid #e8e6e0;">0</div>
-                  <div style="padding:9px 16px;background:#f8f8f6;font-size:1rem;">+</div>
-                </div>
-                <span style="font-size:0.68rem;color:#9a9690;">기본 1박스 차감없음 · 추가 1박스당 75만원</span>
-              </div>
-              <div style="font-size:0.68rem;color:#9a9690;margin-top:5px;">차감 없음</div>
-            </div>
-            <!-- Warranty -->
-            <div style="margin-bottom:14px;">
-              <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.05em;color:#9a9690;margin-bottom:8px;font-weight:500;">워런티 (EXTENDED WARRANTY)</div>
-              <div style="display:flex;border:1px solid #e8e6e0;border-radius:6px;overflow:hidden;width:fit-content;">
-                <div style="padding:9px 16px;background:#f8f8f6;font-size:1rem;">−</div>
-                <div style="padding:9px 22px;font-size:0.95rem;font-weight:600;border-left:1px solid #e8e6e0;border-right:1px solid #e8e6e0;">0년</div>
-                <div style="padding:9px 16px;background:#f8f8f6;font-size:1rem;">+</div>
-              </div>
-              <div style="font-size:0.68rem;color:#9a9690;margin-top:5px;">기본 포함 · 차감없음</div>
-            </div>
-            <!-- Rate -->
-            <div style="margin-bottom:14px;">
-              <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.05em;color:#9a9690;margin-bottom:8px;font-weight:500;">수수료율</div>
-              <div style="display:flex;gap:8px;align-items:center;">
-                <div style="padding:9px 20px;border:1px solid #e8e6e0;border-radius:6px;font-size:0.95rem;font-weight:500;">7%</div>
-                <div style="padding:9px 20px;border:1px solid #111;border-radius:6px;background:#111;color:white;font-size:0.95rem;font-weight:500;">10%</div>
-                <span style="font-size:0.68rem;color:#9a9690;">10%: TMI · Innomed · SevenU / 7%: 그 외</span>
-              </div>
-            </div>
-            <!-- Result -->
-            <div style="background:#111;color:white;border-radius:8px;padding:18px;">
-              <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.75rem;border-bottom:1px solid rgba(255,255,255,0.07);"><span style="opacity:0.4;">총 계약금액</span><span>169,090,909원</span></div>
-              <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.75rem;border-bottom:1px solid rgba(255,255,255,0.07);"><span style="opacity:0.4;">DCD 차감</span><span>없음</span></div>
-              <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.75rem;border-bottom:1px solid rgba(255,255,255,0.07);"><span style="opacity:0.4;">워런티 차감</span><span>없음</span></div>
-              <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.75rem;border-bottom:1px solid rgba(255,255,255,0.07);"><span style="opacity:0.4;">수수료 계산용 실적</span><span>169,090,909원</span></div>
-              <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.75rem;border-bottom:1px solid rgba(255,255,255,0.07);"><span style="opacity:0.4;">커미션</span><span>16,909,091원</span></div>
-              <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.75rem;border-bottom:1px solid rgba(255,255,255,0.07);"><span style="opacity:0.4;">세액 (10%)</span><span>1,690,909원</span></div>
-              <div style="display:flex;justify-content:space-between;padding:10px 0 5px;font-size:0.75rem;border-top:1px solid rgba(255,255,255,0.15);margin-top:4px;"><span style="opacity:0.5;">최종 커미션 합계 (VAT 포함)</span><span style="color:#7ec89a;font-size:1.05rem;font-weight:600;">18,600,000원</span></div>
-            </div>
-            <div style="width:100%;margin-top:10px;padding:11px;background:#2d5a3d;color:white;border-radius:6px;text-align:center;font-size:0.82rem;font-weight:600;">결과 다시 저장하기</div>
-          </div>
-        </div>
         <div class="tip">저장 버튼 눌러야 완료!</div>
       </div>
     </div>
-
     <div class="step">
       <div class="step-num">4</div>
       <div class="step-content">
         <h3>금액 불일치 경고가 뜰 수 있어요</h3>
-        <p>관리자가 미리 예상 커미션을 입력해둔 경우, 내가 계산한 금액과 다르면 아래와 같은 경고창이 나타납니다.</p>
-        <div style="background:#fff8e1;border:1.5px solid #f5e642;border-radius:10px;padding:18px 20px;margin:14px 0;font-size:0.85rem;line-height:1.8;">
-          <div style="font-weight:700;margin-bottom:8px;">⚠️ 관리자 예상 금액과 다릅니다.</div>
-          <div style="color:#555;">관리자 예상: 14,000,000원</div>
-          <div style="color:#555;">내 계산: 12,325,000원</div>
-          <div style="color:#c84b2f;font-weight:600;">차이: -1,675,000원 (11%)</div>
-          <div style="margin-top:12px;display:flex;gap:8px;">
-            <div style="padding:8px 20px;background:#111;color:white;border-radius:6px;font-size:0.8rem;font-weight:600;">그래도 저장</div>
-            <div style="padding:8px 20px;border:1px solid #e0e0e0;border-radius:6px;font-size:0.8rem;">돌아가서 확인</div>
-          </div>
-        </div>
-        <p style="font-size:0.88rem;color:#555;">저장 버튼을 누르면 관리자가 미리 입력한 예상 금액과 자동으로 비교됩니다.</p>
-        <div style="background:#d4edda;border:1.5px solid #b8d4bf;border-radius:10px;padding:16px 20px;margin:12px 0;font-size:0.85rem;">
-          <div style="font-weight:700;margin-bottom:6px;">✅ 금액이 일치할 때</div>
-          <div style="color:#555;">"관리자 예상 금액과 일치합니다!" 팝업이 뜨고 바로 저장돼요.</div>
-        </div>
-        <div style="background:#fff8e1;border:1.5px solid #f5e642;border-radius:10px;padding:16px 20px;margin:12px 0;font-size:0.85rem;">
-          <div style="font-weight:700;margin-bottom:6px;">⚠️ 금액이 다를 때</div>
-          <div style="color:#555;">차이 금액과 함께 경고창이 뜨고, 다시 확인하거나 그래도 저장할 수 있어요. DCD 박스 수나 워런티 연수가 맞는지 먼저 확인해보세요.</div>
-        </div>
+        <p>관리자가 미리 예상 커미션을 입력해둔 경우, 내가 계산한 금액과 다르면 경고창이 나타납니다. 저장 버튼을 누르면 관리자가 미리 입력한 예상 금액과 자동으로 비교됩니다.</p>
         <div class="tip">관리자 예상값이 없으면 팝업 없이 바로 저장돼요</div>
       </div>
     </div>
-
   </div>
 </div>
-
 <div class="divider"></div>
-
-<!-- IMPORTANT -->
 <div class="section">
   <div class="section-label">꼭 알아두세요</div>
   <div class="important-grid">
-    <div class="important-box warn">
-      <span class="icon">⚠️</span>
-      <h4>DCD 박스 수 · 워런티 연수 직접 확인</h4>
-      <p>기본 1박스는 차감 없고 추가 박스부터 차감돼요. 실제 납품된 박스 수를 정확히 선택하세요.<br><br>워런티는 자동으로 세팅되지 않아요. 실제 계약한 <strong>총 워런티 연수</strong>를 직접 선택해야 해요!</p>
-    </div>
-    <div class="important-box warn">
-      <span class="icon">💹</span>
-      <h4>수수료율 한 번 더 확인</h4>
-      <p>딜러사에 따라 자동 세팅되지만 맞는지 꼭 확인해주세요.<br>TMI · Innomed · SevenU → 10% / 그 외 → 7%</p>
-    </div>
-    <div class="important-box good">
-      <span class="icon">🏢</span>
-      <h4>휴먼홀딩스 기준 자동 적용</h4>
-      <p>Human Holdings 딜러사일 경우 DCD 2박스까지 차감 없음 등 별도 기준이 자동 적용돼요. DCD 입력칸 옆에 <strong style="background:#fff3cd;color:#856404;padding:1px 6px;border-radius:3px;">🏢 휴먼홀딩스 기준 적용</strong> 표시가 뜨면 확인하세요.</p>
-    </div>
-    <div class="important-box good">
-      <span class="icon">💾</span>
-      <h4>저장 버튼 꼭 누르기</h4>
-      <p>계산만 하고 저장 안 하면 관리자에게 안 보여요. 반드시 "저장하기" 버튼까지 눌러주세요!</p>
-    </div>
+    <div class="important-box warn"><span class="icon">⚠️</span><h4>DCD 박스 수 · 워런티 연수 직접 확인</h4><p>기본 1박스는 차감 없고 추가 박스부터 차감돼요. 워런티는 자동으로 세팅되지 않아요. 실제 계약한 <strong>총 워런티 연수</strong>를 직접 선택해야 해요!</p></div>
+    <div class="important-box warn"><span class="icon">💹</span><h4>수수료율 한 번 더 확인</h4><p>딜러사에 따라 자동 세팅되지만 맞는지 꼭 확인해주세요.<br>TMI · Innomed · SevenU → 10% / 그 외 → 7%</p></div>
+    <div class="important-box good"><span class="icon">🏢</span><h4>휴먼홀딩스 기준 자동 적용</h4><p>Human Holdings 딜러사일 경우 DCD 2박스까지 차감 없음 등 별도 기준이 자동 적용돼요.</p></div>
+    <div class="important-box good"><span class="icon">💾</span><h4>저장 버튼 꼭 누르기</h4><p>계산만 하고 저장 안 하면 관리자에게 안 보여요. 반드시 "저장하기" 버튼까지 눌러주세요!</p></div>
   </div>
 </div>
-
 <div class="divider"></div>
-
-<!-- FAQ -->
 <div class="section">
   <div class="section-label">자주 묻는 질문</div>
   <div class="faq">
-    <div class="faq-item">
-      <div class="faq-q">내 이름이 없어요</div>
-      <div class="faq-a">이번 달 데이터가 아직 업로드되지 않았거나 이름이 다르게 등록됐을 수 있어요. 관리자에게 문의해주세요.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">계약금액이 실제와 달라요</div>
-      <div class="faq-a">계약금액은 엑셀 데이터 기준으로 자동 입력되며 수정이 불가해요. 금액이 다르다면 관리자에게 문의해주세요.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">저장했는데 다시 들어가면 없어요</div>
-      <div class="faq-a">정상이에요! 내 이름 → 거래처 순서로 다시 들어가면 ✓ 저장됨 표시와 함께 이전에 입력한 값이 그대로 나와요.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">잘못 저장했어요</div>
-      <div class="faq-a">다시 같은 거래처로 들어가서 수정하고 "결과 다시 저장하기" 버튼을 누르면 덮어씌워져요.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">저장을 아예 취소하고 싶어요</div>
-      <div class="faq-a">저장된 거래처로 들어가면 "저장 취소" 버튼이 나타나요. 누르면 저장된 결과가 삭제되고 미완료 상태로 돌아가요.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">모바일에서도 되나요?</div>
-      <div class="faq-a">네! 모바일에서도 동일하게 사용할 수 있어요.</div>
-    </div>
+    <div class="faq-item"><div class="faq-q">내 이름이 없어요</div><div class="faq-a">이번 달 데이터가 아직 업로드되지 않았거나 이름이 다르게 등록됐을 수 있어요. 관리자에게 문의해주세요.</div></div>
+    <div class="faq-item"><div class="faq-q">계약금액이 실제와 달라요</div><div class="faq-a">계약금액은 엑셀 데이터 기준으로 자동 입력되며 수정이 불가해요. 금액이 다르다면 관리자에게 문의해주세요.</div></div>
+    <div class="faq-item"><div class="faq-q">저장했는데 다시 들어가면 없어요</div><div class="faq-a">정상이에요! 내 이름 → 거래처 순서로 다시 들어가면 ✓ 저장됨 표시와 함께 이전에 입력한 값이 그대로 나와요.</div></div>
+    <div class="faq-item"><div class="faq-q">잘못 저장했어요</div><div class="faq-a">다시 같은 거래처로 들어가서 수정하고 "결과 다시 저장하기" 버튼을 누르면 덮어씌워져요.</div></div>
+    <div class="faq-item"><div class="faq-q">모바일에서도 되나요?</div><div class="faq-a">네! 모바일에서도 동일하게 사용할 수 있어요.</div></div>
   </div>
 </div>
-
-<div class="footer">
-  문의사항은 관리자에게 연락해주세요.<br>
-  <strong>커미션 계산기</strong> · 사내 전용
-</div>
-
+<div class="footer">문의사항은 관리자에게 연락해주세요.<br><strong>커미션 계산기</strong> · 사내 전용</div>
 <script>
-// Scroll animation
 const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry, i) => {
-    if (entry.isIntersecting) {
-      setTimeout(() => entry.target.classList.add('visible'), i * 100);
-    }
-  });
+  entries.forEach((entry, i) => { if (entry.isIntersecting) { setTimeout(() => entry.target.classList.add('visible'), i * 100); } });
 }, { threshold: 0.1 });
-
-document.querySelectorAll('.step').forEach(el => observer.observe(el));
+document.querySelectorAll('#guidePage .step').forEach(el => observer.observe(el));
 </script>
 </div>
+
 </div><!-- .wrap -->
 
 <script>
-// ── Supabase ──────────────────────────────────────────────────
 const SB_URL = 'https://lvmolsfspsojhtauciod.supabase.co';
 const SB_KEY = 'sb_publishable_kbn6g7mly7UQN3IcrwJPGA_uQtUlyy-';
 
@@ -1019,11 +547,9 @@ async function sbFetch(method, path, body) {
   return text ? JSON.parse(text) : [];
 }
 
-// ── Storage keys (엑셀 데이터만 로컬) ─────────────────────────
 const KEY_DATA = 'cc_excelData';
 const ADMIN_PW = 'candela2025';
 
-// ── State ─────────────────────────────────────────────────────
 let allData = [];
 let results = {};
 let currentOwner = '', currentMonth = '', currentRow = null;
@@ -1036,7 +562,6 @@ function dedup(name) {
   name = name.trim();
   const len = name.length;
   for (const sep of ['_', ' ']) {
-    // Try every possible split point near the middle
     const mid = Math.floor(len / 2);
     for (let i = mid - 3; i <= mid + 3; i++) {
       if (i <= 0 || i >= len) continue;
@@ -1049,13 +574,15 @@ function dedup(name) {
   return name;
 }
 
-// ── Route ─────────────────────────────────────────────────────
+function resultKey(paydate, owner, customer) {
+  return `${paydate}__${owner}__${customer}`.replace(/\s+/g,'_');
+}
+
 async function route() {
   const hash = location.hash;
   if (hash === '#admin') {
     const authed = sessionStorage.getItem('cc_admin') === '1';
-    if (authed) { showAdmin(); }
-    else { showAdminPw(); }
+    if (authed) { showAdmin(); } else { showAdminPw(); }
   } else if (hash === '#guide') {
     showGuide();
   } else {
@@ -1072,7 +599,6 @@ function showGuide() {
 
 window.addEventListener('hashchange', route);
 
-// ── Admin PW ──────────────────────────────────────────────────
 function showAdminPw() {
   document.getElementById('adminPwPage').style.display = '';
   document.getElementById('adminPage').style.display = 'none';
@@ -1097,7 +623,6 @@ function tryPw() {
   }
 }
 
-// ── Admin ─────────────────────────────────────────────────────
 async function showAdmin() {
   document.getElementById('adminPwPage').style.display = 'none';
   document.getElementById('adminPage').style.display = '';
@@ -1110,23 +635,11 @@ async function showAdmin() {
   if (am) document.getElementById('activeMonthInfo').textContent = '✓ Staff 공개 월: ' + am.slice(0,4) + '.' + am.slice(4,6);
 }
 
-document.getElementById('goAdminBtn').addEventListener('click', () => {
-  location.hash = '#admin';
-});
-
-document.getElementById('adminUploadBtn').addEventListener('click', () => {
-  document.getElementById('adminFileInput').click();
-});
-
-document.getElementById('adminFileInput').addEventListener('change', e => {
-  if (e.target.files[0]) adminProcessFile(e.target.files[0]);
-});
-
+document.getElementById('goAdminBtn').addEventListener('click', () => { location.hash = '#admin'; });
+document.getElementById('adminUploadBtn').addEventListener('click', () => { document.getElementById('adminFileInput').click(); });
+document.getElementById('adminFileInput').addEventListener('change', e => { if (e.target.files[0]) adminProcessFile(e.target.files[0]); });
 document.getElementById('exportBtn').addEventListener('click', exportCSV);
-document.getElementById('setActiveMonthBtn').addEventListener('click', async () => {
-  if (!adminMonth) return;
-  await setActiveMonth(adminMonth);
-});
+document.getElementById('setActiveMonthBtn').addEventListener('click', async () => { if (!adminMonth) return; await setActiveMonth(adminMonth); });
 document.getElementById('clearResultsBtn').addEventListener('click', async () => {
   if (confirm('모든 계산 결과를 삭제할까요?')) {
     try {
@@ -1169,7 +682,10 @@ async function loadResults() {
   try {
     const rows = await sbFetch('GET', '/rest/v1/commission_results?select=*&order=saved_at.desc');
     results = {};
-    rows.forEach(r => { const k = (r.paydate+'__'+r.owner+'__'+r.customer).replace(/\s+/g,'_'); results[k] = { contract:r.contract, dcd:r.dcd, warranty:r.warranty, rate:r.rate, actual:r.actual, total:r.total, expected_total:r.expected_total }; });
+    rows.forEach(r => {
+      const k = resultKey(r.paydate, r.owner, r.customer);
+      results[k] = { contract:r.contract, dcd:r.dcd, warranty:r.warranty, rate:r.rate, actual:r.actual, total:r.total, expected_total:r.expected_total };
+    });
   } catch(e) { console.error('loadResults:', e); }
 }
 
@@ -1189,11 +705,11 @@ function adminProcessFile(file) {
       const h = raw[hRow];
       const fc = kw => h.findIndex(c=>c && String(c).includes(kw));
       const col = {
-        yyyymm:   fc('YYYYMM'), order: fc('Order Number'),
-        product:  fc('Sold Product'), customer: fc('Customer Name'),
-        owner:    fc('Opportunity owner'), dealer: fc('Dealer name'),
+        yyyymm: fc('YYYYMM'), order: fc('Order Number'),
+        product: fc('Sold Product'), customer: fc('Customer Name'),
+        owner: fc('Opportunity owner'), dealer: fc('Dealer name'),
         contract: fc('총계약금액'), rate: fc('수수료율'),
-        paydate:  fc('지급일'), di: fc('Direct/Indirect'),
+        paydate: fc('지급일'), di: fc('Direct/Indirect'),
       };
       const parsed = [];
       for(let i=hRow+1; i<raw.length; i++) {
@@ -1208,22 +724,19 @@ function adminProcessFile(file) {
         parsed.push({
           paydate: pd, owner,
           customer: dedup(String(r[col.customer]||'')),
-          dealer:   String(r[col.dealer]||''),
-          product:  String(r[col.product]||''),
+          dealer: String(r[col.dealer]||''),
+          product: String(r[col.product]||''),
           contract: parseFloat(r[col.contract])||0,
-          rate:     parseFloat(r[col.rate])||0,
-          yyyymm:   yyyymm,
+          rate: parseFloat(r[col.rate])||0,
+          yyyymm: yyyymm,
         });
       }
       if(!parsed.length) { showErr('adminErr','Indirect 데이터가 없습니다.'); return; }
       allData = parsed;
       localStorage.setItem(KEY_DATA, JSON.stringify(allData));
-      // Upload to Supabase
       try {
         await sbFetch('DELETE', '/rest/v1/excel_data?uploaded_at=gte.2000-01-01');
-        for (let i=0; i<parsed.length; i+=50) {
-          await sbFetch('POST', '/rest/v1/excel_data', parsed.slice(i,i+50));
-        }
+        for (let i=0; i<parsed.length; i+=50) { await sbFetch('POST', '/rest/v1/excel_data', parsed.slice(i,i+50)); }
       } catch(e) { console.error('excel upload error:', e); }
       const months = [...new Set(allData.map(d=>d.paydate))].sort((a,b)=>b-a);
       const info = `${file.name} · ${months.map(m=>m.slice(0,4)+'.'+m.slice(4,6)).join(', ')} · ${allData.length}건`;
@@ -1248,8 +761,7 @@ function renderAdminMonths() {
     btn.className = 'pill' + (m===adminMonth?' active':'');
     btn.textContent = m.slice(0,4)+'.'+m.slice(4,6);
     btn.addEventListener('click', () => {
-      adminMonth = m;
-      adminOwnerFilter = '';
+      adminMonth = m; adminOwnerFilter = '';
       document.querySelectorAll('#adminMonthPills .pill').forEach(p=>p.classList.remove('active'));
       btn.classList.add('active');
       renderAdminTable();
@@ -1261,8 +773,6 @@ function renderAdminMonths() {
 function renderAdminTable() {
   const monthData = allData.filter(d => d.paydate === adminMonth);
   const owners = [...new Set(monthData.map(d=>d.owner))].sort();
-
-  // Owner filter pills
   const ofr = document.getElementById('ownerFilterRow');
   ofr.innerHTML = '';
   if(owners.length > 1) {
@@ -1279,8 +789,6 @@ function renderAdminTable() {
       ofr.appendChild(b);
     });
   }
-
-  // Build rows — merge excel data with saved results
   const filtered = monthData.filter(d => !adminOwnerFilter || d.owner === adminOwnerFilter);
   const rows = filtered.map(d => {
     const key = resultKey(d.paydate, d.owner, d.customer);
@@ -1289,22 +797,16 @@ function renderAdminTable() {
     const expectedOnly = r2 && r2.total === 0 ? r2 : null;
     return { ...d, saved, expectedOnly };
   });
-
-  // Summary
-  const totalContract = rows.reduce((s,r)=>s+(r.saved?r.saved.contract:r.contract),0);
   const savedRows = rows.filter(r=>r.saved);
   const totalComm = savedRows.reduce((s,r)=>s+r.saved.total,0);
-  const savedCount = savedRows.length;
   document.getElementById('summaryGrid').innerHTML = `
     <div class="sum-card"><div class="sum-lbl">총 거래처</div><div class="sum-val">${rows.length}건</div></div>
-    <div class="sum-card"><div class="sum-lbl">결과 저장됨</div><div class="sum-val green">${savedCount}건</div></div>
-    <div class="sum-card"><div class="sum-lbl">총 커미션 합계</div><div class="sum-val green">${savedCount?fmt(totalComm)+'원':'—'}</div></div>`;
-
+    <div class="sum-card"><div class="sum-lbl">결과 저장됨</div><div class="sum-val green">${savedRows.length}건</div></div>
+    <div class="sum-card"><div class="sum-lbl">총 커미션 합계</div><div class="sum-val green">${savedRows.length?fmt(totalComm)+'원':'—'}</div></div>`;
   const tbody = document.getElementById('adminTbody');
   tbody.innerHTML = '';
   document.getElementById('adminEmpty').style.display = rows.length ? 'none' : '';
   document.getElementById('adminTable').style.display = rows.length ? '' : 'none';
-
   rows.forEach(r => {
     const s = r.saved;
     const tr = document.createElement('tr');
@@ -1320,7 +822,7 @@ function renderAdminTable() {
       <td>${s?(Math.round(s.rate*100))+'%':'—'}</td>
       <td class="num total-cell">${s?fmt(s.total)+'원':'—'}</td>
       <td class="num">
-        <input type="text" 
+        <input type="text"
           value="${(s&&s.expected_total)||(r.expectedOnly&&r.expectedOnly.expected_total) ? Math.round((s&&s.expected_total)||(r.expectedOnly&&r.expectedOnly.expected_total)).toLocaleString('ko-KR') : ''}"
           placeholder="입력"
           data-paydate="${r.paydate}" data-owner="${r.owner}" data-customer="${r.customer}"
@@ -1351,15 +853,7 @@ function exportCSV() {
   allData.forEach(d => {
     const key = resultKey(d.paydate, d.owner, d.customer);
     const s = results[key];
-    rows.push([
-      d.paydate.slice(0,4)+'.'+d.paydate.slice(4,6),
-      d.owner, d.customer, d.dealer, d.product,
-      s?s.contract:d.contract,
-      s?s.dcd:0, s?s.warranty:0,
-      s?s.actual:'', s?s.rate:'',
-      s?Math.round(s.total/1.1):'', s?Math.round(s.total/11):'',
-      s?s.total:''
-    ]);
+    rows.push([d.paydate.slice(0,4)+'.'+d.paydate.slice(4,6), d.owner, d.customer, d.dealer, d.product, s?s.contract:d.contract, s?s.dcd:0, s?s.warranty:0, s?s.actual:'', s?s.rate:'', s?Math.round(s.total/1.1):'', s?Math.round(s.total/11):'', s?s.total:'']);
   });
   const csv = rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
   const a = document.createElement('a');
@@ -1368,7 +862,6 @@ function exportCSV() {
   a.click();
 }
 
-// ── User ──────────────────────────────────────────────────────
 async function showUser() {
   document.getElementById('adminPwPage').style.display = 'none';
   document.getElementById('adminPage').style.display = 'none';
@@ -1424,11 +917,7 @@ function renderOwners(month) {
     const btn = document.createElement('button');
     btn.className = 'owner-btn' + (savedCount ? ' has-saved' : '');
     btn.innerHTML = `<div class="name">${owner}</div><div class="count">${cnt}건${savedCount?' · ✓ '+savedCount+'건 저장':''}</div>`;
-    btn.addEventListener('click', () => {
-      currentOwner = owner;
-      renderCustomers(month, owner);
-      showStep(2);
-    });
+    btn.addEventListener('click', () => { currentOwner = owner; renderCustomers(month, owner); showStep(2); });
     grid.appendChild(btn);
   });
 }
@@ -1468,83 +957,20 @@ function getProductConfig(dealer, product) {
   const isHuman = /human/i.test(dealer);
   const isGMPP = /gentle|gmpp|gmax/i.test(product);
   const isVBP = /vbeam|vbp/i.test(product);
-
-  if (isHuman && isGMPP) return {
-    type: 'GMPP', dealer: 'human',
-    warranty: [
-      {label:'없음 (기본 1년)', val:0},
-      {label:'+1년 · 900만원', val:9000000},
-      {label:'+2년 · 1,400만원', val:14000000},
-    ],
-    warrantyGuide: '기본 1년 차감없음 · Add 1년 900만원 · Add 2년 1,400만원',
-    dcdFree: 2,
-    dcdTable: [0,0,0,1500000,3300000,4500000],
-    dcdGuide: '기본 2박스 차감없음 · 추가 1박스 150만 · 2박스 330만 · 3박스 450만',
-  };
-  if (isHuman && isVBP) return {
-    type: 'VBP', dealer: 'human',
-    warranty: [
-      {label:'기본 1년 · 차감없음', val:0},
-      {label:"Ext 2년 · 2,100만원", val:21000000, sub:"'26년~ 납품"},
-      {label:"Ext 2년 · 2,000만원", val:20000000, sub:"'25년 이전 납품"},
-      {label:'Ext 3년 · 2,700만원', val:27000000},
-      {label:'Laser Eyewear · 30만원', val:300000},
-    ],
-    warrantyGuide: '기본 1년 차감없음 · Ext 2년 2,100만원 · Ext 3년 2,700만원',
-    dcdFree: 2,
-    dcdTable: [0,0,0,1500000,3000000,4500000,6000000],
-    dcdGuide: '기본 2박스 차감없음 · 추가 1박스 150만 · 2박스 300만 · 3박스 450만 · 4박스 600만',
-  };
-  if (!isHuman && isGMPP) return {
-    type: 'GMPP', dealer: 'general',
-    warranty: [
-      {label:'기본 1년 · 차감없음', val:0},
-      {label:'Add 1년 · 900만원', val:9000000},
-      {label:'Add 2년 · 1,400만원', val:14000000},
-    ],
-    warrantyGuide: '기본 1년 차감없음 · Add 1년 900만원 · Add 2년 1,400만원',
-    dcdFree: 1,
-    pricePerBox: 750000,
-    dcdTable: [],
-    dcdGuide: '기본 1박스 차감없음 · 추가 1박스당 75만원',
-  };
-  if (!isHuman && isVBP) return {
-    type: 'VBP', dealer: 'general',
-    warranty: [
-      {label:'기본 1년 · 차감없음', val:0},
-      {label:"Ext 2년 · 2,100만원", val:21000000, sub:"'26년~ 납품"},
-      {label:"Ext 2년 · 2,000만원", val:20000000, sub:"'25년 이전 납품"},
-      {label:'Ext 3년 · 2,700만원', val:27000000},
-    ],
-    warrantyGuide: '기본 1년 차감없음 · Ext 2년 2,100만원(26년~) / 2,000만원(25년 이전)',
-    dcdFree: 1,
-    pricePerBox: 750000,
-    dcdTable: [],
-    dcdGuide: '기본 1박스 차감없음 · 추가 1박스당 75만원',
-  };
-  // fallback
-  return {
-    type: 'OTHER', dealer: 'general',
-    warranty: [
-      {label:'없음', val:0},
-      {label:'2년 · 2,100만원', val:21000000},
-      {label:'2년 · 2,000만원', val:20000000},
-    ],
-    warrantyGuide: '',
-    dcdFree: 1,
-    dcdTable: [0,0,750000,1500000,2250000],
-    dcdGuide: '1박스 차감없음 · 2박스 75만 · 3박스 150만 · 4박스 225만',
-  };
+  if (isHuman && isGMPP) return { type:'GMPP', dealer:'human', dcdFree:2, dcdTable:[0,0,0,1500000,3300000,4500000], dcdGuide:'기본 2박스 차감없음 · 추가 1박스 150만 · 2박스 330만 · 3박스 450만' };
+  if (isHuman && isVBP) return { type:'VBP', dealer:'human', dcdFree:2, dcdTable:[0,0,0,1500000,3000000,4500000,6000000], dcdGuide:'기본 2박스 차감없음 · 추가 1박스 150만 · 2박스 300만 · 3박스 450만 · 4박스 600만' };
+  if (!isHuman && isGMPP) return { type:'GMPP', dealer:'general', dcdFree:1, pricePerBox:750000, dcdTable:[], dcdGuide:'기본 1박스 차감없음 · 추가 1박스당 75만원' };
+  if (!isHuman && isVBP) return { type:'VBP', dealer:'general', dcdFree:1, pricePerBox:750000, dcdTable:[], dcdGuide:'기본 1박스 차감없음 · 추가 1박스당 75만원' };
+  return { type:'OTHER', dealer:'general', dcdFree:1, dcdTable:[0,0,750000,1500000,2250000], dcdGuide:'1박스 차감없음 · 2박스 75만 · 3박스 150만 · 4박스 225만' };
 }
 
 let currentConfig = null;
 let mWarrantyYears = 0;
-let mWarrantyIsNew = true; // '26년~ 납품 여부 (VBP only)
+let mWarrantyIsNew = true;
 
 function getWarrantyCost(config, years, isNew) {
   if (!config) return 0;
   const type = config.type;
-  const isHuman = config.dealer === 'human';
   if (type === 'GMPP') {
     if (years <= 1) return 0;
     if (years === 2) return 9000000;
@@ -1561,50 +987,25 @@ function getWarrantyCost(config, years, isNew) {
 function updateWarrantyUI() {
   if (!currentConfig) return;
   const type = currentConfig.type;
-
   const warrantyRow = document.getElementById('warrantyRow');
-  if (type === 'OTHER') {
-    if (warrantyRow) warrantyRow.style.display = 'none';
-    mWarranty = 0;
-    calc();
-    return;
-  }
+  if (type === 'OTHER') { if (warrantyRow) warrantyRow.style.display = 'none'; mWarranty = 0; calc(); return; }
   if (warrantyRow) warrantyRow.style.display = '';
-
   const cost = getWarrantyCost(currentConfig, mWarrantyYears, mWarrantyIsNew);
   document.getElementById('warrantyVal').textContent = mWarrantyYears + '년';
-  
-  // Show/hide year toggle for VBP when years >= 3
   const toggle = document.getElementById('warrantyYearToggle');
-  if (type === 'VBP' && mWarrantyYears >= 3) {
-    toggle.style.display = '';
-  } else {
-    toggle.style.display = 'none';
-  }
-  
-  let note = '';
-  if (cost === 0) note = '기본 포함 · 차감없음';
-  else note = '-' + Math.round(cost).toLocaleString('ko-KR') + '원 차감';
-  document.getElementById('warrantyNote').textContent = note;
-  
+  if (type === 'VBP' && mWarrantyYears >= 3) { toggle.style.display = ''; } else { toggle.style.display = 'none'; }
+  document.getElementById('warrantyNote').textContent = cost === 0 ? '기본 포함 · 차감없음' : '-' + Math.round(cost).toLocaleString('ko-KR') + '원 차감';
   mWarranty = cost;
   calc();
 }
 
-
 function getDCDAmount(config, boxes) {
   const free = config.dcdFree || 0;
   const pricePerBox = config.pricePerBox || 0;
-  if (pricePerBox) {
-    const chargeable = Math.max(0, boxes - free);
-    return chargeable * pricePerBox;
-  }
+  if (pricePerBox) { return Math.max(0, boxes - free) * pricePerBox; }
   const t = config.dcdTable;
   if (boxes >= t.length) {
-    // extrapolate
-    const last = t[t.length-1];
-    const secondLast = t[t.length-2] || 0;
-    const step = last - secondLast;
+    const last = t[t.length-1]; const secondLast = t[t.length-2] || 0; const step = last - secondLast;
     return last + step * (boxes - t.length + 1);
   }
   return t[boxes] || 0;
@@ -1617,14 +1018,11 @@ function loadCalc(d, saved) {
   document.getElementById('selAmount').textContent = fmt(d.contract);
   document.getElementById('selProduct').textContent = d.product||'';
   document.getElementById('selYyyymm').textContent = d.yyyymm ? d.yyyymm.slice(0,4)+'.'+d.yyyymm.slice(4,6) : '—';
-
   currentConfig = getProductConfig(d.dealer, d.product);
-
   const realSaved = saved && saved.total > 0 ? saved : null;
-  if(realSaved) { saved = realSaved; } else { saved = null; }
-  if(saved) {
-    mDCD = saved.dcd; mWarranty = saved.warranty; mRate = saved.rate;
-    document.getElementById('contractInput').value = saved.contract ? parseInt(saved.contract).toLocaleString('ko-KR') : '';
+  if(realSaved) {
+    mDCD = realSaved.dcd; mWarranty = realSaved.warranty; mRate = realSaved.rate;
+    document.getElementById('contractInput').value = realSaved.contract ? parseInt(realSaved.contract).toLocaleString('ko-KR') : '';
     document.getElementById('dcdVal').textContent = mDCD;
     updateDCD();
     document.querySelectorAll('.rate-btn').forEach(b => b.classList.toggle('active', parseFloat(b.dataset.rate)===mRate));
@@ -1660,7 +1058,6 @@ document.getElementById('cancelBtn').addEventListener('click', async () => {
   if (!currentRow) return;
   if (!confirm('저장된 결과를 취소할까요?')) return;
   try {
-    // 저장 취소 - total을 0으로 리셋하되 expected_total은 유지
     await sbFetch('PATCH', `/rest/v1/commission_results?paydate=eq.${currentRow.paydate}&owner=eq.${encodeURIComponent(currentRow.owner)}&customer=eq.${encodeURIComponent(currentRow.customer)}`, {
       contract: 0, dcd: 0, warranty: 0, rate: 0, actual: 0, total: 0
     });
@@ -1682,9 +1079,7 @@ document.getElementById('warrantyMinus').addEventListener('click', () => {
     if (mWarrantyYears === 4) mWarrantyYears = 3;
     else if (mWarrantyYears === 3) mWarrantyYears = 1;
     else if (mWarrantyYears > 0) mWarrantyYears--;
-  } else {
-    if (mWarrantyYears > 0) mWarrantyYears--;
-  }
+  } else { if (mWarrantyYears > 0) mWarrantyYears--; }
   updateWarrantyUI();
 });
 document.getElementById('warrantyPlus').addEventListener('click', () => {
@@ -1694,9 +1089,7 @@ document.getElementById('warrantyPlus').addEventListener('click', () => {
     if (mWarrantyYears === 0) mWarrantyYears = 1;
     else if (mWarrantyYears === 1) mWarrantyYears = 3;
     else if (mWarrantyYears === 3) mWarrantyYears = 4;
-  } else {
-    if (mWarrantyYears < 3) mWarrantyYears++;
-  }
+  } else { if (mWarrantyYears < 3) mWarrantyYears++; }
   updateWarrantyUI();
 });
 document.getElementById('toggleNew').addEventListener('click', () => {
@@ -1725,9 +1118,6 @@ function updateDCD() {
   const a = currentConfig ? getDCDAmount(currentConfig, mDCD) : mDCD*750000;
   document.getElementById('dcdNote').textContent=a>0?`${mDCD}박스 → -${fmt(a)}원 차감`:'차감 없음';
 }
-document.querySelectorAll('.choice-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{ document.querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); mWarranty=parseInt(btn.dataset.warranty); calc(); });
-});
 document.querySelectorAll('.rate-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{ document.querySelectorAll('.rate-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); mRate=parseFloat(btn.dataset.rate); calc(); });
 });
@@ -1763,7 +1153,6 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
   const total=Math.round(comm+tax);
   const btn = document.getElementById('saveBtn');
 
-  // Check against admin expected amount
   const key0 = resultKey(currentRow.paydate, currentRow.owner, currentRow.customer);
   const existingResult = results[key0];
   if (existingResult && existingResult.expected_total) {
@@ -1792,7 +1181,8 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
         contract, dcd:mDCD, warranty:mWarranty, rate:mRate, actual:Math.round(actual), total
       });
     }
-    const key = currentRow.paydate+'__'+currentRow.owner+'__'+currentRow.customer;
+    // ✅ 버그 수정: resultKey() 함수 사용으로 key 일관성 보장
+    const key = resultKey(currentRow.paydate, currentRow.owner, currentRow.customer);
     const prevExpected = results[key] ? results[key].expected_total : null;
     results[key] = { contract, dcd:mDCD, warranty:mWarranty, rate:mRate, actual:Math.round(actual), total, expected_total: prevExpected };
     document.getElementById('saveNote').textContent = '✓ 저장되었습니다.';
@@ -1817,19 +1207,12 @@ async function saveExpected(input) {
     const key = resultKey(paydate, owner, customer);
     const existing = await sbFetch('GET', `/rest/v1/commission_results?paydate=eq.${paydate}&owner=eq.${encodeURIComponent(owner)}&customer=eq.${encodeURIComponent(customer)}&select=id`);
     if (existing && existing.length > 0) {
-      await sbFetch('PATCH', `/rest/v1/commission_results?paydate=eq.${paydate}&owner=eq.${encodeURIComponent(owner)}&customer=eq.${encodeURIComponent(customer)}`, {
-        expected_total: val
-      });
+      await sbFetch('PATCH', `/rest/v1/commission_results?paydate=eq.${paydate}&owner=eq.${encodeURIComponent(owner)}&customer=eq.${encodeURIComponent(customer)}`, { expected_total: val });
     } else {
-      // row 없으면 새로 만들기 (예상값만)
-      await sbFetch('POST', '/rest/v1/commission_results', {
-        paydate, owner, customer, expected_total: val,
-        contract: 0, dcd: 0, warranty: 0, rate: 0, actual: 0, total: 0
-      });
+      await sbFetch('POST', '/rest/v1/commission_results', { paydate, owner, customer, expected_total: val, contract: 0, dcd: 0, warranty: 0, rate: 0, actual: 0, total: 0 });
     }
     if (!results[key]) results[key] = {};
     results[key].expected_total = val;
-    // 차이 칸 업데이트
     const tr = input.closest('tr');
     if (tr && results[key] && results[key].total) {
       const diffCell = tr.cells[tr.cells.length - 2];
@@ -1851,14 +1234,9 @@ async function deleteResult(paydate, owner, customer) {
   } catch(e) { alert('삭제 오류: '+e.message); }
 }
 
-function resultKey(paydate, owner, customer) {
-  return `${paydate}__${owner}__${customer}`.replace(/\s+/g,'_');
-}
-
 function showErr(id, msg) { const el=document.getElementById(id); el.textContent=msg; el.style.display='block'; el.classList.add('show'); }
 function hideErr(id) { const el=document.getElementById(id); el.classList.remove('show'); el.style.display='none'; }
 
-// ── Boot ──────────────────────────────────────────────────────
 document.getElementById('goGuideBtn').addEventListener('click', () => { location.hash = '#guide'; });
 document.getElementById('goGuideBtnAdmin').addEventListener('click', () => { location.hash = '#guide'; });
 route();
