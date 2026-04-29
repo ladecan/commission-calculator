@@ -1660,9 +1660,13 @@ document.getElementById('cancelBtn').addEventListener('click', async () => {
   if (!currentRow) return;
   if (!confirm('저장된 결과를 취소할까요?')) return;
   try {
-    await sbFetch('DELETE', `/rest/v1/commission_results?paydate=eq.${currentRow.paydate}&owner=eq.${encodeURIComponent(currentRow.owner)}&customer=eq.${encodeURIComponent(currentRow.customer)}`);
+    // 저장 취소 - total을 0으로 리셋하되 expected_total은 유지
+    await sbFetch('PATCH', `/rest/v1/commission_results?paydate=eq.${currentRow.paydate}&owner=eq.${encodeURIComponent(currentRow.owner)}&customer=eq.${encodeURIComponent(currentRow.customer)}`, {
+      contract: 0, dcd: 0, warranty: 0, rate: 0, actual: 0, total: 0
+    });
     const key = resultKey(currentRow.paydate, currentRow.owner, currentRow.customer);
-    delete results[key];
+    const prevExpected = results[key] ? results[key].expected_total : null;
+    results[key] = { contract:0, dcd:0, warranty:0, rate:0, actual:0, total:0, expected_total: prevExpected };
     document.getElementById('saveNote').textContent = '저장이 취소되었습니다.';
     document.getElementById('saveBtn').textContent = '이 결과 저장하기';
     document.getElementById('cancelBtn').style.display = 'none';
